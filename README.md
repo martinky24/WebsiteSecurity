@@ -27,3 +27,5 @@ Nick researching/planning (week 1)
 ## Vulnerabilities
 
 Kyle researching/planning (week 1)
+
+See Vulnerabilities.md
