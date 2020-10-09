@@ -1,6 +1,7 @@
 ## General Resources:
 
  - NodeJS security cheat sheet from OWASP: https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
+ - NodeJS Crypto Library: https://nodejs.org/api/crypto.html
 
 # Password Cracking
 
