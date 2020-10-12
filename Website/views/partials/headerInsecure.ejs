@@ -1,0 +1,44 @@
+<!-- views/partials/header.ejs -->
+
+<p style="text-align:left;">
+    Logged in as <%= locals.uname %>
+    <script>
+    function toSecure() {
+        var initial_url = window.location.href;
+        var url = initial_url .split( '/' );
+        var updated_url = '/secure/' + url[ url.length - 1 ];
+        console.log(updated_url);
+        window.location.href = updated_url;
+    }
+    </script>
+    <span style="float:right;">
+        <button type="button" onclick="toSecure();">Insecure (click to change)</button>
+    </span>
+</p>
+<nav class="navbar navbar-expand-lg navbar-dark" style="margin-bottom:20px; background-color: red;">
+    <a class="navbar-brand" href="/insecure/home">Generic Banking Application</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/insecure/Deposits">Deposits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/insecure/Withdrawals">Withdrawals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/insecure/Transfers">Transfers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/insecure/Account">Account</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
