@@ -55,7 +55,7 @@ app.get('/', function(req, res) {
         return res.redirect('secure/home');
     }
     // no session found, go to login page
-    res.redirect('login');
+    res.redirect('/secure/login');
 });
 
 /* Load in the code which processes the routing  */

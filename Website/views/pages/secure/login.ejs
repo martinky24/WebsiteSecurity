@@ -4,13 +4,13 @@
 <html lang="en">
 
 <head>
-    <%- include ('../partials/head') %>
+    <%- include ('../../partials/head') %>
 </head>
 
 <body class="container">
 
     <header>
-        <%- include ('../partials/loginHeader') %>
+        <%- include ('../../partials/loginHeaderSecure') %>
     </header>
 
     <main>
@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col"></div>
                     <div class="col">
-                        <form class="formTableLogin" action="/loginUser" method="post">
+                        <form class="formTableLogin" action="/loginUserSecure" method="post">
                             <div class="formPairLogin">
                                 <label class="formLabelLogin" for="loginUsername"><b>Username:</b></label>
                                 <input class="formInputLogin" type="text" id="loginUsername" name="loginUsername"><br><br>
@@ -43,7 +43,7 @@
     </main>
 
     <footer>
-        <%- include ('../partials/footer') %>
+        <%- include ('../../partials/footer') %>
     </footer>
 
 </body>
