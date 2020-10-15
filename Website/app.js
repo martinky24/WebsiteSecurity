@@ -6,7 +6,7 @@
 var express = require('express');
 var app = express();
 
-/*  Express-session Redis for storing session values */
+/*  Express-session for storing session values */
 const session = require('express-session');
 
 var FileStore = require('session-file-store')(session);
@@ -51,8 +51,8 @@ app.use('/public',  express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
     // Logged in and session key exists
-    if (req.session.userId) {
-        return res.redirect('secure/home');
+    if (req.session.uname) {
+        return res.redirect('/secure/home');
     }
     // no session found, go to login page
     res.redirect('/secure/login');
@@ -62,13 +62,28 @@ app.get('/', function(req, res) {
 var route_login = require("./routes/login.js");
 var route_home = require("./routes/home.js");
 var route_account = require("./routes/account.js");
-
+var route_deposits = require("./routes/deposits.js");
+var route_transfers = require("./routes/transfers.js");
+var route_withdrawals = require("./routes/withdrawals.js");
 
 app.use(route_login);
 app.use(route_home);
 app.use(route_account);
+app.use(route_deposits);
+app.use(route_transfers);
+app.use(route_withdrawals);
 
+app.get('/insecure/logout', function(req, res, next) {
+    console.log('Logging out as user ' + req.session.uname);
+    req.session.destroy();
+    res.redirect('/');
+});
 
+app.get('/secure/logout', function(req, res, next) {
+    console.log('Logging out as user ' + req.session.uname);
+    req.session.destroy();
+    res.redirect('/');
+});
 
 /******************
  * Error pages

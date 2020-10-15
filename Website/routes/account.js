@@ -4,7 +4,10 @@ var bcrypt = require('bcrypt');
 // var connection = require('../dbcon.js');
 
 router.get('/secure/account', function(req, res, next) {
-
+	if (! (req.session.userId)) {
+		return res.redirect('/secure/login');
+	}
+	
 	res.render('pages/secure/account');
 });
 

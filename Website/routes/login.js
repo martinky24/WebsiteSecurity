@@ -5,6 +5,10 @@ var bcrypt = require('bcrypt');
 
 router.get('/secure/login', function(req, res, next) {
 
+	if (req.session.uname) {
+		return res.redirect('/secure/home');
+	}
+	
 	/*
 		Server processing code, e.g. DB calls, goes here
 	*/
