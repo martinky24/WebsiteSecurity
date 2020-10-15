@@ -12,7 +12,10 @@ router.get('/secure/transfers', function(req, res, next) {
 });
 
 router.get('/insecure/transfers', function(req, res, next) {
-
+	if (! req.session.uname) {
+		return res.redirect('/insecure/login');
+	}
+	
 	res.render('pages/insecure/transfers');
 });
 

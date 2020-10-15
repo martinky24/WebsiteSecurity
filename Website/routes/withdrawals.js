@@ -12,7 +12,10 @@ router.get('/secure/withdrawals', function(req, res, next) {
 });
 
 router.get('/insecure/withdrawals', function(req, res, next) {
-
+	if (! req.session.uname) {
+		return res.redirect('/insecure/login');
+	}
+	
 	res.render('pages/insecure/withdrawals');
 });
 

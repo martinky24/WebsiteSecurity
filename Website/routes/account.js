@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt');
 // var connection = require('../dbcon.js');
 
 router.get('/secure/account', function(req, res, next) {
-	if (! (req.session.userId)) {
+	if (! req.session.uname) {
 		return res.redirect('/secure/login');
 	}
 	

@@ -12,12 +12,12 @@ const session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
 app.use(session({
-    name: 'server-session-cookie-id',
-    secret: 'ssshhhhh',
-    saveUninitialized: true,
-    resave: true,
-    store: new FileStore({logFn: function(){}}),
-    retries: 0
+	name: 'server-session-cookie-id',
+	secret: 'ssshhhhh',
+	saveUninitialized: true,
+	resave: true,
+	store: new FileStore({logFn: function(){}}),
+	retries: 0
 }));
 
 // for login
@@ -50,12 +50,12 @@ app.use('/public',  express.static(__dirname + '/public'));
  ******************/
 
 app.get('/', function(req, res) {
-    // Logged in and session key exists
-    if (req.session.uname) {
-        return res.redirect('/secure/home');
-    }
-    // no session found, go to login page
-    res.redirect('/secure/login');
+	// Logged in and session key exists
+	if (req.session.uname) {
+		return res.redirect('/secure/home');
+	}
+	// no session found, go to login page
+	res.redirect('/secure/login');
 });
 
 /* Load in the code which processes the routing  */
@@ -73,16 +73,18 @@ app.use(route_deposits);
 app.use(route_transfers);
 app.use(route_withdrawals);
 
-app.get('/insecure/logout', function(req, res, next) {
-    console.log('Logging out as user ' + req.session.uname);
-    req.session.destroy();
-    res.redirect('/');
+app.get('/secure/logout', function(req, res, next) {
+	console.log('Logging out as user ' + req.session.uname);
+	req.session.destroy();
+
+	res.redirect('/secure/login');
 });
 
-app.get('/secure/logout', function(req, res, next) {
-    console.log('Logging out as user ' + req.session.uname);
-    req.session.destroy();
-    res.redirect('/');
+app.get('/insecure/logout', function(req, res, next) {
+	console.log('Logging out as user ' + req.session.uname);
+	req.session.destroy();
+
+	res.redirect('/insecure/login');
 });
 
 /******************
@@ -90,14 +92,14 @@ app.get('/secure/logout', function(req, res, next) {
  ******************/
 
 app.use(function (req, res) {
-    res.status(404);
-    res.render('404');
+	res.status(404);
+	res.render('404');
 });
 
 app.use(function (err, req, res, next) {
-    console.error(err.stack);
-    res.status(500);
-    res.render('500');
+	console.error(err.stack);
+	res.status(500);
+	res.render('500');
 });
 
 

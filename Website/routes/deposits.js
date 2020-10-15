@@ -12,6 +12,9 @@ router.get('/secure/deposits', function(req, res, next) {
 });
 
 router.get('/insecure/deposits', function(req, res, next) {
+	if (! req.session.uname) {
+		return res.redirect('/insecure/login');
+	}
 
 	res.render('pages/insecure/deposits');
 });

@@ -39,6 +39,9 @@ router.get('/secure/login', function(req, res, next) {
 
 router.get('/insecure/login', function(req, res, next) {
 
+	if (req.session.uname) {
+		return res.redirect('/insecure/home');
+	}
 	/*
 		Server processing code, e.g. DB calls, goes here
 	*/
@@ -53,7 +56,7 @@ router.get('/insecure/login', function(req, res, next) {
 		if (password === "admin") {
 			req.session.uname = req.body.loginUsername;
 			console.log('Logging in as user ' + req.session.uname);
-			res.redirect("/secure/home");
+			res.redirect("/insecure/home");
 		} else {
 			res.send({
 				"code":204,
