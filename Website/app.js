@@ -45,6 +45,8 @@ app.set('views/insecure', path.join(__dirname, 'views/insecure/'));
 app.use(express.static(__dirname + '/public'));
 app.use('/public',  express.static(__dirname + '/public'));
 
+const postgres = require('./dbcon.js');
+
 /******************
  * Route handling
  ******************/
