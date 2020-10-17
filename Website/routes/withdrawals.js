@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 // var connection = require('../dbcon.js');
 
 router.get('/secure/withdrawals', function(req, res, next) {
