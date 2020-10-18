@@ -3,8 +3,8 @@ const { Client } = require('pg');
 
 function getClient(){
     return new Client({
-        user: 'coreuser',
-        password: 'corepass',
+        user: process.env.DBUSER,
+        password: process.env.DBPASS,
         host: 'team-web-security.cni5jxwbesmd.us-west-1.rds.amazonaws.com',
         database: 'banking',
         port: 5422,
@@ -12,14 +12,19 @@ function getClient(){
 }
 function runQuery(query,callback){
     var client = getClient()
-    client.connect()
-    client.query(query, (err, res) => {
-        client.end()
-        console.log(`Result of the query ${query}:\n`,"Errors:",err,"\nResults:",res)
-        if(callback){
-            callback(res)
+    client.connect(err => {
+        if (err) {
+          console.error("connection:",client,'connection error', err.stack)
+        } else {
+          client.query(query, (err, res) => {
+            client.end()
+            console.log(`Result of the query ${query}:\n`,"Errors:",err,"\nResults:",res)
+            if(callback){
+                callback(res)
+            }
+          });
         }
-    });
+      })
 }
 exports.getDbClient = getClient;
 exports.runDBQuery = runQuery; // mainly just use this to take care of connection handling
