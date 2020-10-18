@@ -1,0 +1,51 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ('../../partials/head') %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include ('../../partials/loginHeaderSecure') %>
+    </header>
+
+    <main>
+        <div class="custom-jumbo">
+            <h2 class="centerHeader"><b>Login</b></h2>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                        <form class="formTableLogin" action="/loginUserSecure" method="post">
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="loginUsername"><b>Username:</b></label>
+                                <input class="formInputLogin" type="text" id="loginUsername" name="loginUsername"><br><br>
+                            </div>
+                            <div class="formPair">
+                                <label class="formLabelLogin" for="pword"><b>Password:</b></label>
+                                <input class="formInputLogin" type="password" id="pword" name="pword"><br><br>
+                            </div>
+                            <br><input class="btn btn-primary" type="submit" value="Submit">
+                        </form>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <%- include ('../../partials/footer') %>
+    </footer>
+
+</body>
+
+</html>
