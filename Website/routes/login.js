@@ -23,7 +23,12 @@ router.get('/secure/login', function(req, res, next) {
 		if (password === "admin") {
 			req.session.uname = req.body.loginUsername;
 			console.log('Logging in as user ' + req.session.uname);
-			res.redirect("/secure/home");
+			req.session.save((err)=>{
+				if(err){
+					console.log(err)
+				}
+				res.redirect("/secure/home");
+			});
 		} else {
 			res.send({
 				"code":204,
@@ -31,7 +36,7 @@ router.get('/secure/login', function(req, res, next) {
 			})
 		}
 	}
-
+	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
 	router.post('/loginUserSecure', loginUserSecure);
 	express().use('/api', router);
 	res.render('pages/secure/login');
@@ -56,7 +61,13 @@ router.get('/insecure/login', function(req, res, next) {
 		if (password === "admin") {
 			req.session.uname = req.body.loginUsername;
 			console.log('Logging in as user ' + req.session.uname);
-			res.redirect("/insecure/home");
+			req.session.save((err)=>{
+				if(err){
+					console.log(err)
+				}
+				res.redirect("/insecure/home");
+			});
+			
 		} else {
 			res.send({
 				"code":204,
@@ -64,7 +75,7 @@ router.get('/insecure/login', function(req, res, next) {
 			})
 		}
 	}
-
+	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
 	router.post('/loginUserInsecure', loginUserInsecure);
 	express().use('/api', router);
 	res.render('pages/insecure/login');
