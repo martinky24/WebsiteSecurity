@@ -11,8 +11,6 @@ Tyler researching/planning (week 1)
 
 ## Website
 
-Brenden researching/planning (week 1)
-
 - NodeJS website backend
 - EJS for templating
 
