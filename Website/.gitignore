@@ -1,6 +1,7 @@
-node_modules/
+node_modules
 package-lock.json
 sessions/
+setenvs.sh
 *.rdb
 
 setenvs.sh
