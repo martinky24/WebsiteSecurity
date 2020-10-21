@@ -31,7 +31,7 @@ export PORT=80
 The application process is managed using PM2, this allows automatic application restarts on changes. To run the applicaiton:
 
 ```bash
-sudo -E pm2 start index.js
+sudo PORT=80 pm2 start app.js
 ```
 
-This command will run elevated since we are interfacing with a public port. The "-E" is used to maintain the set environment variables from earlier. 
+This command will run elevated since we are interfacing with a public port. Any environment variables need to passed to the sudo command or used in a config file. Running in the current environment "sudo -E" will spawn 2 PM2 processes that will conflict with each other and not hint at any issue. The result will be an hour of wasted time.
