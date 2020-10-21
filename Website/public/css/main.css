@@ -1,0 +1,28 @@
+.formLabelLogin {
+    float: left;
+    width: 28%;
+}
+
+.formInputLogin {
+    float: left;
+    width: 60%;
+}
+
+.formPairLogin {
+    display: table-row;
+}
+
+.formTableLogin {
+    display: table;
+    margin: auto;
+    padding-top: 20px;
+    width: 100%;
+}
+
+#loginButton {
+    left: 50%;
+}
+
+.centerHeader {
+    text-align:center;
+}
