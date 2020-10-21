@@ -15,8 +15,10 @@ ssh -i path/to/key.pem ubuntu@18.217.120.194
 
 OR, in your config:
 ```bash
-Host 18.217.120.194
-IdentityFile /path/to/key.pem
+Host ec2 
+    HostName 18.217.120.194
+    User ubuntu
+    IdentityFile /path/to/key.pem
 ```
 
 ### Application Configuration
