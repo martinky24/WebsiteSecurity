@@ -13,7 +13,7 @@ function fillTables(rowCount){
     });
 }
 function fillUser(){
-    var passLength = faker.random.number({'min':5,'max':50})
+    var passLength = faker.random.number({'min':5,'max':10})
     var query = `INSERT INTO users VALUES (DEFAULT,'${faker.internet.password(passLength)}','${faker.internet.userName()}','${faker.internet.password(passLength)}') RETURNING user_id`
     dbCon.runDBQuery(query,(res)=>{
         console.log(res.rows[0].user_id);
