@@ -110,7 +110,7 @@ app.use(function (err, req, res, next) {
  * Launch communication
  ******************/
 
-const port = 54545;
+const port = process.env.PORT || 54545;
 app.listen(port);
 console.log('Local server is running at http://localhost:' + port + '/.\nCMD+C to quit.');
 
