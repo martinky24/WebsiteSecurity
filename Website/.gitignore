@@ -3,5 +3,5 @@ package-lock.json
 sessions/
 setenvs.sh
 *.rdb
-
+*.pem
 setenvs.sh

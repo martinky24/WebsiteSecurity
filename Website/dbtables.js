@@ -7,15 +7,20 @@ function resetTables(callback){
 }
 function fillTables(rowCount){
     resetTables(()=>{
+        passLength = faker.random.number({'min':5,'max':10})
+        fillUser("admin","admin")
         for (let i = 0; i < rowCount; i++) {
-            fillUser()
+            fillFullUser(faker.internet.password(passLength),faker.internet.userName())
         }
     });
 }
-function fillUser(){
-    var passLength = faker.random.number({'min':5,'max':10})
-    var query = `INSERT INTO users VALUES (DEFAULT,'${faker.internet.password(passLength)}','${faker.internet.userName()}','${faker.internet.password(passLength)}') RETURNING user_id`
-    dbCon.runDBQuery(query,(res)=>{
+function fillUser(pass,username,callback){
+    var hashed = "" //hashFunc(pass)
+    var query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hashed}') RETURNING user_id`
+    dbCon.runDBQuery(query,callback);
+}
+function fillFullUser(pass,username){
+    fillUser(pass,username,(res)=>{
         console.log(res.rows[0].user_id);
         if(res && res.rows && res.rows.length > 0 && res.rows[0].user_id){
             userID = res.rows[0].user_id;
