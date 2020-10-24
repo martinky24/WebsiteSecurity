@@ -23,8 +23,6 @@ router.get('/secure/login', function(req, res, next) {
 		var username = req.body.loginUsername
 		// IMPLEMENT THIS WITH BCRYPT
 
-
-		// CURRENTLY ACCEPTS ANY USERNAME SO LONG AS PASSWORD IS 'admin'
 		checkValidUser(username, password, (qResult)=>{
 			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
 				req.session.uname = username;
@@ -62,27 +60,29 @@ router.get('/insecure/login', function(req, res, next) {
 
 	var loginUserInsecure = async function(req, res){
 		var password = req.body.pword;
+		var username = req.body.loginUsername
 
 		// IMPLEMENT THIS WITH BCRYPT
 
+		checkValidUser(username, password, (qResult)=>{
+			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
+				req.session.uname = username;
+				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
+				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
 
-		// CURRENTLY ACCEPTS ANY USERNAME SO LONG AS PASSWORD IS 'admin'
-		if (password === "admin") {
-			req.session.uname = req.body.loginUsername;
-			console.log('Logging in as user ' + req.session.uname);
-			req.session.save((err)=>{
-				if(err){
-					console.log(err)
-				}
-				res.redirect("/insecure/home");
-			});
-			
-		} else {
-			res.send({
-				"code":204,
-				"success":"Incorrect username or password"
-			})
-		}
+				req.session.save((err)=>{
+					if(err){
+						console.log(err)
+					}
+					res.redirect("/insecure/home");
+				});
+			} else {
+				res.send({
+					"code":204,
+					"success":"Incorrect username or password"
+				})
+			}
+		})
 	}
 	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
 	router.post('/loginUserInsecure', loginUserInsecure);
