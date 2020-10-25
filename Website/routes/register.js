@@ -5,19 +5,19 @@ var dbCon = require("./../dbcon");
 var faker = require('faker'); //https://github.com/marak/Faker.js/
 
 
-function checkValidUser(user, callback){
+function checkValidUsername(user, callback){
     var query = `SELECT TRUE as exists, user_id FROM users WHERE username = '${user}' LIMIT 1 `
     dbCon.runDBQuery(query, callback);
 }
 
-function createLogin(user,pass,callback){
+function createLogin(user, pass, callback){
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(pass, salt);
     var query = `INSERT INTO users (username, password, password_hash) VALUES ('${user}', '${pass}', '${hash}') RETURNING user_id`;
     dbCon.runDBQuery(query, callback);
 }
 
-function createAccount(user, first, last, bday, email, uid){
+function createAccount(user, first, last, bday, email, uid, callback){
     var query = `INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ('${first}', '${last}', '${bday}', '${email}', '${uid}')`
     dbCon.runDBQuery(query);
     
@@ -46,13 +46,17 @@ router.post('/registerUser', function(req, res, next) {
     var email = req.body.registerEmail;
 
 
-    checkValidUser(username, (qResult)=>{
+    checkValidUsername(username, (qResult)=>{
         if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
             res.redirect('/register?message=Username exists');
         } else {
             createLogin(username, password, (qResult)=>{
                 uid = qResult.rows[0].user_id;
-                createAccount(username, first, last, bday, email, uid);
+                createAccount(username, first, last, bday, email, uid, function (err,res) {
+                    if(err) {
+                        console.log('createAccount(...) error occured: ' + err);
+                    }
+                });
                 res.redirect("/login");
             })
         }
