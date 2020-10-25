@@ -8,7 +8,12 @@ router.get('/secure/deposits', function(req, res, next) {
 		return res.redirect('/secure/login');
 	}
 	
-	res.render('pages/secure/deposits');
+	res.render('pages/secure/deposits',{
+		username:"testuser",
+		balance: "testBalance",
+		accountid: "testAccountid",
+		secure: true
+	});
 });
 
 router.get('/insecure/deposits', function(req, res, next) {
