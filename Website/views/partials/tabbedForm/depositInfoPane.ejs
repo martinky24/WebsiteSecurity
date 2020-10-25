@@ -3,30 +3,21 @@
             <div class="col-md-8">
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <label for="depositType">Type</label>
-                        <select class="custom-select" id="depositType" required>
-                            <option selected>Choose...</option>
-                            <option value="credit">Credit</option>
-                            <option value="debit">Debit</option>
-                        </select>
+                        <label for="account_number">Account Number</label>
+                        <input id="account_number" required name="account_number" type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9" value="">
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="routing_number">Routing Number</label>
+                        <input id="routing_number" required name="routing_number" type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9" value="">
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="check_number">Check Number</label>
+                        <input id="check_number" required name="check_number" type="text" pattern="[0-9]{4,9}" minlength="4" maxlength="9" value="">
                     </div>
                     <div class="form-group col-12">
                         <label for="amount">Amount</label>
-                        <input id="amount" required name="amount" type="number" step="any" pattern="[-+]?[0-9]*[.,]?[0-9]+"
-                            value="">
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="card_number">Card Number</label>
-                        <input id="card_number" required name="card_number" type="text" pattern="[0-9]{16,19}" value="">
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="security_number">Security Code</label>
-                        <input id="security_number" required name="security_number" type="text" pattern="[0-9]{3,4}"
-                            value="">
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="expire">Expires</label>
-                        <input id="expire" required name="expire" type="date" value="">
+                        <input id="amount" required name="amount" type="number" step="any" pattern="[+]?[0-9]*[.,]?[0-9]+"
+                            value="" min="0">
                     </div>
                 </div>
                 <input type=submit value="Deposit">
