@@ -26,5 +26,9 @@ function runQuery(query,callback){
         }
       })
 }
+function hasQueryResult(queryResult){
+  return queryResult && queryResult.rows && queryResult.rows.length > 0
+}
 exports.getDbClient = getClient;
 exports.runDBQuery = runQuery; // mainly just use this to take care of connection handling
+exports.hasQueryResult = hasQueryResult;

@@ -30,10 +30,10 @@ function fillFinancialInfo(userID,routeNum,accountNum,balance){
 }
 
 function fillFullUser(pass,username){
-    fillUser(pass,username,(res)=>{
-        console.log(res.rows[0].user_id);
-        if(res && res.rows && res.rows.length > 0 && res.rows[0].user_id){
-            userID = res.rows[0].user_id;
+    fillUser(pass,username,(qResult)=>{
+        console.log(qResult.rows[0].user_id);
+        if(dbCon.hasQueryResult(qResult) && qResult.rows[0].user_id){
+            userID = qResult.rows[0].user_id;
             var fName = faker.name.firstName().replace("'","");
             var lName = faker.name.lastName().replace("'","");
             fillPersonalInfo(

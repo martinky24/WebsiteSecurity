@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
-// var connection = require('../dbcon.js');
+var dbCon = require("./../dbcon");
+
+function checkValidUser(user,pass,callback){
+	var query = `SELECT TRUE as exists, user_id FROM users WHERE password = '${pass}' AND username = '${user}' LIMIT 1 `
+    dbCon.runDBQuery(query, callback);
+}
 
 router.get('/secure/login', function(req, res, next) {
 
@@ -15,26 +20,28 @@ router.get('/secure/login', function(req, res, next) {
 
 	var loginUserSecure = async function(req, res){
 		var password = req.body.pword;
-
+		var username = req.body.loginUsername
 		// IMPLEMENT THIS WITH BCRYPT
 
+		checkValidUser(username, password, (qResult)=>{
+			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
+				req.session.uname = username;
+				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
+				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
 
-		// CURRENTLY ACCEPTS ANY USERNAME SO LONG AS PASSWORD IS 'admin'
-		if (password === "admin") {
-			req.session.uname = req.body.loginUsername;
-			console.log('Logging in as user ' + req.session.uname);
-			req.session.save((err)=>{
-				if(err){
-					console.log(err)
-				}
-				res.redirect("/secure/home");
-			});
-		} else {
-			res.send({
-				"code":204,
-				"success":"Incorrect username or password"
-			})
-		}
+				req.session.save((err)=>{
+					if(err){
+						console.log(err)
+					}
+					res.redirect("/secure/home");
+				});
+			} else {
+				res.send({
+					"code":204,
+					"success":"Incorrect username or password"
+				})
+			}
+		})
 	}
 	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
 	router.post('/loginUserSecure', loginUserSecure);
@@ -53,27 +60,29 @@ router.get('/insecure/login', function(req, res, next) {
 
 	var loginUserInsecure = async function(req, res){
 		var password = req.body.pword;
+		var username = req.body.loginUsername
 
 		// IMPLEMENT THIS WITH BCRYPT
 
+		checkValidUser(username, password, (qResult)=>{
+			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
+				req.session.uname = username;
+				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
+				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
 
-		// CURRENTLY ACCEPTS ANY USERNAME SO LONG AS PASSWORD IS 'admin'
-		if (password === "admin") {
-			req.session.uname = req.body.loginUsername;
-			console.log('Logging in as user ' + req.session.uname);
-			req.session.save((err)=>{
-				if(err){
-					console.log(err)
-				}
-				res.redirect("/insecure/home");
-			});
-			
-		} else {
-			res.send({
-				"code":204,
-				"success":"Incorrect username or password"
-			})
-		}
+				req.session.save((err)=>{
+					if(err){
+						console.log(err)
+					}
+					res.redirect("/insecure/home");
+				});
+			} else {
+				res.send({
+					"code":204,
+					"success":"Incorrect username or password"
+				})
+			}
+		})
 	}
 	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
 	router.post('/loginUserInsecure', loginUserInsecure);
