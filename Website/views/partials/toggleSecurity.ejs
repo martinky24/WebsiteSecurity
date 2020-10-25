@@ -1,10 +1,10 @@
 <p style="text-align:left;">
+    <form method="post" action="/api/togglesecurity" style="float:right;">
+        <input type="submit" value="Toggle Security Mode">
+    </form>  
     <% if ( locals.uname ) { %>
         Logged in as <%= locals.uname %>
     <% } else {%>
         Not logged in
     <% } %>
-    <span style="float:right;">
-        <a href="/api/togglesecurity">Toggle Security Mode</a>
-    </span>
 </p>
