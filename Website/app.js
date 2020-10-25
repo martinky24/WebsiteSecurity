@@ -23,6 +23,11 @@ app.use(session({
 // for login
 app.use(function(req, res, next) {
    res.locals.uname = req.session.uname;
+   if (req.session.secure == null) {
+		req.session.secure = true
+   }
+   res.locals.secure = req.session.secure;
+   console.log("save session")
    next();
 });
 
@@ -67,6 +72,7 @@ var route_account = require("./routes/account.js");
 var route_deposits = require("./routes/deposits.js");
 var route_transfers = require("./routes/transfers.js");
 var route_withdrawals = require("./routes/withdrawals.js");
+var route_api = require("./routes/api.js");
 
 app.use(route_login);
 app.use(route_home);
@@ -74,6 +80,7 @@ app.use(route_account);
 app.use(route_deposits);
 app.use(route_transfers);
 app.use(route_withdrawals);
+app.use("/api",route_api);
 
 app.get('/secure/logout', function(req, res, next) {
 	console.log('Logging out as user ' + req.session.uname);
