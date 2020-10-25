@@ -82,12 +82,6 @@ app.use(route_transfers);
 app.use(route_withdrawals);
 app.use("/api",route_api);
 
-app.get('/logout', function(req, res, next) {
-	console.log('Logging out as user ' + req.session.uname);
-	req.session.destroy();
-
-	res.redirect('/login');
-});
 
 /******************
  * Error pages

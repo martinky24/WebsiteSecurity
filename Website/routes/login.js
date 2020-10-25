@@ -22,7 +22,7 @@ router.post('/loginUser', function(req, res, next) {
 	var password = req.body.pword;
 	var username = req.body.loginUsername
 	// IMPLEMENT THIS WITH BCRYPT
-	
+
 	checkValidUser(username, password, (qResult)=>{
 		if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
 			req.session.uname = username;
@@ -39,6 +39,13 @@ router.post('/loginUser', function(req, res, next) {
 			res.redirect('/login?message=Incorrect Username or Password');
 		}
 	});
+});
+
+router.get('/logout', function(req, res, next) {
+	console.log('Logging out as user ' + req.session.uname);
+	req.session.destroy();
+
+	res.redirect('/login');
 });
 
 module.exports = router;
