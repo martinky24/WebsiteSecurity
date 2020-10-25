@@ -8,11 +8,11 @@ router.get('/secure/deposits', function(req, res, next) {
 		return res.redirect('/secure/login');
 	}
 	
-	res.render('pages/secure/deposits',{
-		username:"testuser",
+	res.render('pages/deposits',{
+		username:req.session.uname,
 		balance: "testBalance",
 		accountid: "testAccountid",
-		secure: true
+		secure: req.session.secure
 	});
 });
 

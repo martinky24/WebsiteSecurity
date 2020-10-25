@@ -9,11 +9,18 @@ router.use('/',function (req, res, next) {
 router.get('/togglesecurity', function(req, res, next) {
     req.session.secure = !req.session.secure;
     console.log("Secure:",req.session.secure)
-    if(req.originalUrl.split("/").pop()!="togglesecurity"){
-        res.redirect(req.originalUrl)
-    }else{
-        res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
-    }
+    routeUrl = req.protocol + '://' + req.get('host') + req.originalUrl
+    // console.log("req.headers.referer",req.headers.referer,"\nrouteUrl",routeUrl)
+    req.session.save((err)=>{
+        if(err){
+            console.log(err)
+        }
+        if(req.headers.referer && req.headers.referer != routeUrl){
+            res.redirect(req.headers.referer)
+        }else{
+            res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
+        }
+    });
+    
 });
-
 module.exports = router;

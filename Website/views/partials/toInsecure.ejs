@@ -5,15 +5,15 @@
         Not logged in
     <% } %>
     <script>
-    function toInsecure() {
-        var initial_url = window.location.href;
-        var url = initial_url .split( '/' );
-        var updated_url = '/insecure/' + url[ url.length - 1 ];
-        console.log(updated_url);
-        window.location.href = updated_url;
-    }
-    </script>
+        function toInsecure() {
+            var initial_url = window.location.href;
+            var url = initial_url .split( '/' );
+            var updated_url = '/insecure/' + url[ url.length - 1 ];
+            console.log(updated_url);
+            window.location.href = updated_url;
+        }
+        </script>
     <span style="float:right;">
-        <button type="button" onclick="toInsecure();">Secure (click to change)</button>
+        <a href="/api/togglesecurity">Toggle Security Mode</a>
     </span>
 </p>

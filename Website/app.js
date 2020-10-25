@@ -25,7 +25,9 @@ app.use(function(req, res, next) {
    res.locals.uname = req.session.uname;
    if (req.session.secure == null) {
 		req.session.secure = true
+		console.log("reseting security mode")
    }
+   console.log("security mode",req.session.secure)
    res.locals.secure = req.session.secure;
    console.log("save session")
    next();
