@@ -1,0 +1,72 @@
+<!-- views/pages/register.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ('./../partials/head') %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include ('./../partials/loginHeader') %>
+    </header>
+
+    <main>
+        <% if(message){ %>
+            <div class="alert alert-warning alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <%= message %>
+              </div>
+        <% } %>
+        <div class="custom-jumbo">
+            <h2 class="centerHeader"><b>Create Account</b></h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                        <form class="formTableLogin" action="/registerUser" method="post">
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="registerFirst"><b>First Name:</b></label>
+                                <input class="formInputLogin" type="text" id="registerFirst" name="registerFirst"><br><br>
+                            </div>
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="registerLast"><b>Last Name:</b></label>
+                                <input class="formInputLogin" type="text" id="registerLast" name="registerLast"><br><br>
+                            </div>
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="registerBday"><b>Birthday:</b></label>
+                                <input class="formInputLogin" type="date" id="registerBday" name="registerBday"><br><br>
+                            </div>
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="registerEmail"><b>Email:</b></label>
+                                <input class="formInputLogin" type="email" id="registerEmail" name="registerEmail"><br><br>
+                            </div>
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="registerUsername"><b>Username:</b></label>
+                                <input class="formInputLogin" type="text" id="registerUsername" name="registerUsername"><br><br>
+                            </div>
+                            <div class="formPairLogin">
+                                <label class="formLabelLogin" for="pword"><b>Password:</b></label>
+                                <input class="formInputLogin" type="password" id="registerPword" name="registerPword"><br><br>
+                            </div>
+                            <br><input class="btn btn-primary" type="submit" value="Submit">
+                        </form>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </main>
+
+    <footer>
+        <%- include ('./../partials/footer') %>
+    </footer>
+
+</body>
+
+</html>

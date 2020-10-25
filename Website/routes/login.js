@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs');
 var dbCon = require("./../dbcon");
 
 function checkValidUser(user,pass,callback){
-	var query = `SELECT TRUE as exists, user_id FROM users WHERE password = '${pass}' AND username = '${user}' LIMIT 1 `
+	var query = `SELECT TRUE as exists, password_hash, user_id FROM users WHERE username = '${user}' LIMIT 1 `
     dbCon.runDBQuery(query, callback);
 }
 
@@ -24,7 +24,7 @@ router.post('/loginUser', function(req, res, next) {
 	// IMPLEMENT THIS WITH BCRYPT
 
 	checkValidUser(username, password, (qResult)=>{
-		if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
+		if (dbCon.hasQueryResult(qResult) && bcrypt.compareSync(password, qResult.rows[0].password_hash)) {
 			req.session.uname = username;
 			req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
 			console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);

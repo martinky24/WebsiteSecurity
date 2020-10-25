@@ -78,6 +78,7 @@ var route_deposits = require("./routes/deposits.js");
 var route_transfers = require("./routes/transfers.js");
 var route_withdrawals = require("./routes/withdrawals.js");
 var route_api = require("./routes/api.js");
+var route_register = require("./routes/register.js");
 
 app.use(route_login);
 app.use(route_home);
@@ -86,6 +87,7 @@ app.use(route_deposits);
 app.use(route_transfers);
 app.use(route_withdrawals);
 app.use("/api",route_api);
+app.use(route_register);
 
 
 /******************
