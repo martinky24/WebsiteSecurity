@@ -1,5 +1,6 @@
 var dbCon= require("./dbcon");
 var faker = require('faker'); //https://github.com/marak/Faker.js/
+var bcrypt = require('bcryptjs');
 
 function resetTables(callback){
     var query = `TRUNCATE TABLE users, personal_info, financial_info, transaction_history RESTART IDENTITY`
@@ -16,9 +17,11 @@ function fillTables(rowCount){
 }
 
 function fillUser(pass,username,callback){
-    var hashed = "" //hashFunc(pass)
-    var query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hashed}') RETURNING user_id`
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(pass, salt);
+    var query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hash}') RETURNING user_id`
     dbCon.runDBQuery(query,callback);
+
 }
 function fillPersonalInfo(userID,first,last,birth,email){
     var query = `INSERT INTO personal_info VALUES (DEFAULT,'${first}','${last}','${birth}','${email}',${userID})`
