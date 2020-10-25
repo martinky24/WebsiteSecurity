@@ -25,11 +25,11 @@ app.use(function(req, res, next) {
    res.locals.uname = req.session.uname;
    if (req.session.secure == null) {
 		req.session.secure = true
-		console.log("reseting security mode")
+		console.log("resetting security mode")
    }
-   console.log("security mode",req.session.secure)
+   //console.log("security mode",req.session.secure)
    res.locals.secure = req.session.secure;
-   console.log("save session")
+   //console.log("save session")
    next();
 });
 
@@ -47,8 +47,6 @@ app.use(express.urlencoded({extended: false}))
 /* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
 const path = require('path');
 app.set('views', path.join(__dirname, 'views/'));
-app.set('views/secure', path.join(__dirname, 'views/secure/'));
-app.set('views/insecure', path.join(__dirname, 'views/insecure/'));
 app.use(express.static(__dirname + '/public'));
 app.use('/public',  express.static(__dirname + '/public'));
 
@@ -61,10 +59,10 @@ const postgres = require('./dbcon.js');
 app.get('/', function(req, res) {
 	// Logged in and session key exists
 	if (req.session.uname) {
-		return res.redirect('/secure/home');
+		return res.redirect('/home');
 	}
 	// no session found, go to login page
-	res.redirect('/secure/login');
+	res.redirect('/login');
 });
 
 /* Load in the code which processes the routing  */
@@ -84,18 +82,11 @@ app.use(route_transfers);
 app.use(route_withdrawals);
 app.use("/api",route_api);
 
-app.get('/secure/logout', function(req, res, next) {
+app.get('/logout', function(req, res, next) {
 	console.log('Logging out as user ' + req.session.uname);
 	req.session.destroy();
 
-	res.redirect('/secure/login');
-});
-
-app.get('/insecure/logout', function(req, res, next) {
-	console.log('Logging out as user ' + req.session.uname);
-	req.session.destroy();
-
-	res.redirect('/insecure/login');
+	res.redirect('/login');
 });
 
 /******************

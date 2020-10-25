@@ -8,17 +8,13 @@ function checkValidUser(user,pass,callback){
     dbCon.runDBQuery(query, callback);
 }
 
-router.get('/secure/login', function(req, res, next) {
+router.get('/login', function(req, res, next) {
 
 	if (req.session.uname) {
-		return res.redirect('/secure/home');
+		return res.redirect('/home');
 	}
-	
-	/*
-		Server processing code, e.g. DB calls, goes here
-	*/
 
-	var loginUserSecure = async function(req, res){
+	var loginUser = async function(req, res){
 		var password = req.body.pword;
 		var username = req.body.loginUsername
 		// IMPLEMENT THIS WITH BCRYPT
@@ -33,61 +29,22 @@ router.get('/secure/login', function(req, res, next) {
 					if(err){
 						console.log(err)
 					}
-					res.redirect("/secure/home");
+					res.redirect("/home");
 				});
 			} else {
-				res.send({
-					"code":204,
-					"success":"Incorrect username or password"
-				})
+				res.render('pages/login',{
+					secure: req.session.secure,
+					message: "Incorrect Username or Password"
+				});
 			}
 		})
 	}
 	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
-	router.post('/loginUserSecure', loginUserSecure);
-	express().use('/api', router);
-	res.render('pages/secure/login');
-});
-
-router.get('/insecure/login', function(req, res, next) {
-
-	if (req.session.uname) {
-		return res.redirect('/insecure/home');
-	}
-	/*
-		Server processing code, e.g. DB calls, goes here
-	*/
-
-	var loginUserInsecure = async function(req, res){
-		var password = req.body.pword;
-		var username = req.body.loginUsername
-
-		// IMPLEMENT THIS WITH BCRYPT
-
-		checkValidUser(username, password, (qResult)=>{
-			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
-				req.session.uname = username;
-				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
-				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
-
-				req.session.save((err)=>{
-					if(err){
-						console.log(err)
-					}
-					res.redirect("/insecure/home");
-				});
-			} else {
-				res.send({
-					"code":204,
-					"success":"Incorrect username or password"
-				})
-			}
-		})
-	}
-	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
-	router.post('/loginUserInsecure', loginUserInsecure);
-	express().use('/api', router);
-	res.render('pages/insecure/login');
+	router.post('/loginUser', loginUser);
+	res.render('pages/login',{
+		secure: req.session.secure,
+		message: ""
+	});
 });
 
 module.exports = router;

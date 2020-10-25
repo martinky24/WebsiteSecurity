@@ -21,6 +21,6 @@ router.get('/togglesecurity', function(req, res, next) {
             res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
         }
     });
-    
+
 });
 module.exports = router;
