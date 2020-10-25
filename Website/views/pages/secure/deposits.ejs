@@ -15,10 +15,40 @@
 
     <main>
         <h2 class="centerHeader">Deposits (secure)</h2>
-        <%- include ('../../partials/depositsMainHeader') %>
-        <%- include ('../../partials/depositsMainBody') %>
-        <%- include ('../../partials/depositsMainFooter') %>
-
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row">
+                    <span class="col-" id="username">username</span>
+                    <span class="col- ml-auto" id="accountid">accountid</span>
+                </div>
+                <div class="row">
+                    <span class="col-">Balance:</span>
+                    <span id="balance" class="col">$...</span>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row justify-content-center">
+                    <ul class="nav nav-pills md-tabs nav-justified col">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#deposit_info" role="tab"
+                                aria-controls="deposit_info">Deposit Info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#billing_info" role="tab"
+                                aria-controls="billing_info">Billing
+                                Info</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <%- include ('../../partials/depositForm') %>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
