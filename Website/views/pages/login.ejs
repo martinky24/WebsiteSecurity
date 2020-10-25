@@ -4,24 +4,29 @@
 <html lang="en">
 
 <head>
-    <%- include ('../../partials/head') %>
+    <%- include ('./../partials/head') %>
 </head>
 
 <body class="container">
 
     <header>
-        <%- include ('../../partials/loginHeaderSecure') %>
+        <%- include ('./../partials/loginHeader') %>
     </header>
 
     <main>
+        <% if(message){ %>
+            <div class="alert alert-warning alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <%= message %>
+              </div>
+        <% } %>
         <div class="custom-jumbo">
             <h2 class="centerHeader"><b>Login</b></h2>
-            
             <div class="container">
                 <div class="row">
                     <div class="col"></div>
                     <div class="col">
-                        <form class="formTableLogin" action="/loginUserSecure" method="post">
+                        <form class="formTableLogin" action="/loginUser" method="post">
                             <div class="formPairLogin">
                                 <label class="formLabelLogin" for="loginUsername"><b>Username:</b></label>
                                 <input class="formInputLogin" type="text" id="loginUsername" name="loginUsername"><br><br>
@@ -43,7 +48,7 @@
     </main>
 
     <footer>
-        <%- include ('../../partials/footer') %>
+        <%- include ('./../partials/footer') %>
     </footer>
 
 </body>

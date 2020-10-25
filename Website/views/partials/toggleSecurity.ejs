@@ -1,0 +1,10 @@
+<p style="text-align:left;">
+    <% if ( locals.uname ) { %>
+        Logged in as <%= locals.uname %>
+    <% } else {%>
+        Not logged in
+    <% } %>
+    <span style="float:right;">
+        <a href="/api/togglesecurity">Toggle Security Mode</a>
+    </span>
+</p>

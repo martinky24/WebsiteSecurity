@@ -1,8 +1,12 @@
 <!-- views/partials/header.ejs -->
 
-<%- include ('../partials/toSecure') %>
-<nav class="navbar navbar-expand-lg navbar-dark" style="margin-bottom:20px; background-color: red;">
-    <a class="navbar-brand" href="/insecure/home">Generic Banking Application</a>
+<%- include ('./toggleSecurity') %>
+<%
+let insecureCss = ""
+if(!secure){insecureCss="background-color: red!important;"} 
+%>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="margin-bottom:20px;<%= insecureCss %>" >
+    <a class="navbar-brand" href="/">Generic Banking Application</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -11,19 +15,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/insecure/Deposits">Deposits</a>
+                <a class="nav-link" href="/deposits">Deposits</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/insecure/Withdrawals">Withdrawals</a>
+                <a class="nav-link" href="/withdrawals">Withdrawals</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/insecure/Transfers">Transfers</a>
+                <a class="nav-link" href="/transfers">Transfers</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/insecure/Account">Account</a>
+                <a class="nav-link" href="/account">Account</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/insecure/logout">Logout</a>
+                <a class="nav-link" href="/logout">Logout</a>
             </li>
         </ul>
     </div>

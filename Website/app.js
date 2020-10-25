@@ -16,14 +16,34 @@ app.use(session({
 	secret: 'ssshhhhh',
 	saveUninitialized: true,
 	resave: true,
-	store: new FileStore({logFn: function(){}}),
+	store: new FileStore({
+		logFn: function () {}
+	}),
 	retries: 0
 }));
 
 // for login
-app.use(function(req, res, next) {
-   res.locals.uname = req.session.uname;
-   next();
+app.use(function (req, res, next) {
+	res.locals.uname = req.session.uname;
+	if (req.query.secure) {
+		// /deposits?secure=true
+		req.session.secure = req.query.secure.toLocaleLowerCase() == "true" ? true : false
+		console.log("Session security was forced to be", req.session.secure)
+	}
+	if (req.session.secure == null) {
+		req.session.secure = true
+		console.log("resetting security mode")
+	}
+	//console.log("security mode",req.session.secure)
+	res.locals.secure = req.session.secure;
+	//console.log("save session")
+	req.session.save((err) => {
+		if (err) {
+			console.log(err)
+		}
+		next();
+	});
+
 });
 
 /* Load EJS view engine */
@@ -32,18 +52,20 @@ app.set('view engine', 'ejs');
 
 /* body-parser used for parsing post requests as JSON */
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({
+	extended: false
+}))
 
 /* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
 const path = require('path');
 app.set('views', path.join(__dirname, 'views/'));
-app.set('views/secure', path.join(__dirname, 'views/secure/'));
-app.set('views/insecure', path.join(__dirname, 'views/insecure/'));
 app.use(express.static(__dirname + '/public'));
-app.use('/public',  express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
 
 const postgres = require('./dbcon.js');
 
@@ -51,13 +73,13 @@ const postgres = require('./dbcon.js');
  * Route handling
  ******************/
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 	// Logged in and session key exists
 	if (req.session.uname) {
-		return res.redirect('/secure/home');
+		return res.redirect('/home');
 	}
 	// no session found, go to login page
-	res.redirect('/secure/login');
+	res.redirect('/login');
 });
 
 /* Load in the code which processes the routing  */
@@ -67,6 +89,7 @@ var route_account = require("./routes/account.js");
 var route_deposits = require("./routes/deposits.js");
 var route_transfers = require("./routes/transfers.js");
 var route_withdrawals = require("./routes/withdrawals.js");
+var route_api = require("./routes/api.js");
 
 app.use(route_login);
 app.use(route_home);
@@ -74,20 +97,8 @@ app.use(route_account);
 app.use(route_deposits);
 app.use(route_transfers);
 app.use(route_withdrawals);
+app.use("/api", route_api);
 
-app.get('/secure/logout', function(req, res, next) {
-	console.log('Logging out as user ' + req.session.uname);
-	req.session.destroy();
-
-	res.redirect('/secure/login');
-});
-
-app.get('/insecure/logout', function(req, res, next) {
-	console.log('Logging out as user ' + req.session.uname);
-	req.session.destroy();
-
-	res.redirect('/insecure/login');
-});
 
 /******************
  * Error pages

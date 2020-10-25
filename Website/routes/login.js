@@ -8,86 +8,44 @@ function checkValidUser(user,pass,callback){
     dbCon.runDBQuery(query, callback);
 }
 
-router.get('/secure/login', function(req, res, next) {
+router.get('/login', function(req, res, next) {
 
 	if (req.session.uname) {
-		return res.redirect('/secure/home');
+		return res.redirect('/home');
 	}
-	
-	/*
-		Server processing code, e.g. DB calls, goes here
-	*/
+	res.render('pages/login',{
+		secure: req.session.secure,
+		message: req.query.message
+	});
+});
+router.post('/loginUser', function(req, res, next) {
+	var password = req.body.pword;
+	var username = req.body.loginUsername
+	// IMPLEMENT THIS WITH BCRYPT
 
-	var loginUserSecure = async function(req, res){
-		var password = req.body.pword;
-		var username = req.body.loginUsername
-		// IMPLEMENT THIS WITH BCRYPT
+	checkValidUser(username, password, (qResult)=>{
+		if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
+			req.session.uname = username;
+			req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
+			console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
 
-		checkValidUser(username, password, (qResult)=>{
-			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
-				req.session.uname = username;
-				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
-				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
-
-				req.session.save((err)=>{
-					if(err){
-						console.log(err)
-					}
-					res.redirect("/secure/home");
-				});
-			} else {
-				res.send({
-					"code":204,
-					"success":"Incorrect username or password"
-				})
-			}
-		})
-	}
-	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
-	router.post('/loginUserSecure', loginUserSecure);
-	express().use('/api', router);
-	res.render('pages/secure/login');
+			req.session.save((err)=>{
+				if(err){
+					console.log(err)
+				}
+				res.redirect("/home");
+			});
+		} else {
+			res.redirect('/login?message=Incorrect Username or Password');
+		}
+	});
 });
 
-router.get('/insecure/login', function(req, res, next) {
+router.get('/logout', function(req, res, next) {
+	console.log('Logging out as user ' + req.session.uname);
+	req.session.destroy();
 
-	if (req.session.uname) {
-		return res.redirect('/insecure/home');
-	}
-	/*
-		Server processing code, e.g. DB calls, goes here
-	*/
-
-	var loginUserInsecure = async function(req, res){
-		var password = req.body.pword;
-		var username = req.body.loginUsername
-
-		// IMPLEMENT THIS WITH BCRYPT
-
-		checkValidUser(username, password, (qResult)=>{
-			if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
-				req.session.uname = username;
-				req.session.userID = qResult.rows[0].user_id // Store for easy personal/financial lookup
-				console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
-
-				req.session.save((err)=>{
-					if(err){
-						console.log(err)
-					}
-					res.redirect("/insecure/home");
-				});
-			} else {
-				res.send({
-					"code":204,
-					"success":"Incorrect username or password"
-				})
-			}
-		})
-	}
-	// MAKES ROUTE ONLY AVAILABLE WHEN ON LOGIN PAGE
-	router.post('/loginUserInsecure', loginUserInsecure);
-	express().use('/api', router);
-	res.render('pages/insecure/login');
+	res.redirect('/login');
 });
 
 module.exports = router;

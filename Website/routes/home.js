@@ -4,20 +4,15 @@ var bcrypt = require('bcryptjs');
 
 // var connection = require('../dbcon.js');
 
-router.get('/secure/home', function(req, res, next) {
+router.get('/home', function(req, res, next) {
 	if (! req.session.uname) {
-		return res.redirect('/secure/login');
+		return res.redirect('/login');
 	}
 
-	res.render('pages/secure/home');
-});
-
-router.get('/insecure/home', function(req, res, next) {
-	if (! req.session.uname) {
-		return res.redirect('/insecure/login');
-	}
-	
-	res.render('pages/insecure/home');
+	res.render('pages/home',{
+		username:req.session.uname,
+		secure: req.session.secure
+	});
 });
 
 module.exports = router;
