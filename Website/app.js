@@ -23,6 +23,11 @@ app.use(session({
 // for login
 app.use(function(req, res, next) {
    res.locals.uname = req.session.uname;
+   if(req.query.secure){
+	   // /deposits?secure=true
+	   req.session.secure = req.query.secure.toLocaleLowerCase()=="true" ? true:false 
+	   console.log("Session security was forced to be",req.session.secure)
+   }
    if (req.session.secure == null) {
 		req.session.secure = true
 		console.log("resetting security mode")
