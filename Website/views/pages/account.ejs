@@ -14,7 +14,7 @@
     </header>
 
     <main>
-        <h2 class="centerHeader">Account Info<%- include('./../partials/isSecureTitle.ejs') %></h2>
+        <h2 class="centerHeader">Account Info <%- include('./../partials/isSecureTitle.ejs') %></h2>
 
         <div class="container">
             <div class="row">
@@ -27,16 +27,16 @@
                         </thead>
 
                         <tr>
-                            <th scope="row" class="tdLabel" style="width: 50%;">Name: </th>
-                            <td class="tdEntry" style="width: 50%;"><%= first %> <%= last %></td>
+                            <th scope="row" style="width: 50%;">Name: </th>
+                            <td style="width: 50%;"><%= first %> <%= last %></td>
                         </tr>
                         <tr>
-                            <th scope="row" class="tdLabel">Date Of Birth: </th>
-                            <td class="tdEntry"><%= birthday %></td>
+                            <th scope="row">Date Of Birth: </th>
+                            <td><%= birthday %></td>
                         </tr>
                         <tr>
-                            <th scope="row" class="tdLabel">Email: </th>
-                            <td class="tdEntry"><%= email %></td>
+                            <th scope="row">Email: </th>
+                            <td><%= email %></td>
                         </tr>
                     </table>
                 </div>
@@ -50,16 +50,16 @@
                         </thead>
 
                         <tr>
-                            <th scope="row" class="tdLabel" style="width: 50%;">Account number: </th>
-                            <td class="tdEntry" style="width: 50%;"><%= account %></td>
+                            <th scope="row" style="width: 50%;">Account number: </th>
+                            <td style="width: 50%;"><%= account %></td>
                         </tr>
                         <tr>
-                            <th scope="row" class="tdLabel">Routing Number: </th>
-                            <td class="tdEntry"><%= routing %></td>
+                            <th scope="row">Routing Number: </th>
+                            <td><%= routing %></td>
                         </tr>
                         <tr>
-                            <th scope="row" class="tdLabel">Balance: </th>
-                            <td class="tdEntry"><%= balance %></td>
+                            <th scope="row">Balance: </th>
+                            <td><%= balance %></td>
                         </tr>
                     </table>
                 </div>

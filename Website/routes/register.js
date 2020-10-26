@@ -52,7 +52,7 @@ router.post('/registerUser', function(req, res, next) {
         } else {
             createLogin(username, password, (qResult)=>{
                 uid = qResult.rows[0].user_id;
-                createAccount(username, first, last, bday, email, uid, function (err,res) {
+                createAccount(username, first, last, bday, email, uid, function (results, err) {
                     if(err) {
                         console.log('createAccount(...) error occured: ' + err);
                     }
