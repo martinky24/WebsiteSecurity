@@ -16,6 +16,56 @@
     <main>
         <h2 class="centerHeader">Account Info<%- include('./../partials/isSecureTitle.ejs') %></h2>
 
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 offset-md-1 border" style="background-color: white;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="font-size: xx-large;">Personal Information</th>
+                            </tr>
+                        </thead>
+
+                        <tr>
+                            <th scope="row" class="tdLabel" style="width: 50%;">Name: </th>
+                            <td class="tdEntry" style="width: 50%;"><%= first %> <%= last %></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="tdLabel">Date Of Birth: </th>
+                            <td class="tdEntry"><%= birthday %></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="tdLabel">Email: </th>
+                            <td class="tdEntry"><%= email %></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-md-4 offset-md-1 border" style="background-color: white;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="font-size: xx-large;">Financial Info</th>
+                            </tr>
+                        </thead>
+
+                        <tr>
+                            <th scope="row" class="tdLabel" style="width: 50%;">Account number: </th>
+                            <td class="tdEntry" style="width: 50%;"><%= account %></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="tdLabel">Routing Number: </th>
+                            <td class="tdEntry"><%= routing %></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="tdLabel">Balance: </th>
+                            <td class="tdEntry"><%= balance %></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer>
