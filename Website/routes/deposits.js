@@ -13,7 +13,7 @@ router.get('/deposits', function(req, res, next) {
 		if (dbCon.hasQueryResult(qResult)){
 			balance = qResult.rows[0].balance;
 			account_number = qResult.rows[0].account_number;
-			console.log(balance,accountid)
+			console.log(balance,account_number)
 		}
 		res.render('pages/deposits',{
 			username:req.session.uname,
