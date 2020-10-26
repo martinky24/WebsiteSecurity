@@ -16,26 +16,34 @@ app.use(session({
 	secret: 'ssshhhhh',
 	saveUninitialized: true,
 	resave: true,
-	store: new FileStore({logFn: function(){}}),
+	store: new FileStore({
+		logFn: function () {}
+	}),
 	retries: 0
 }));
 
 // for login
-app.use(function(req, res, next) {
-   res.locals.uname = req.session.uname;
-   if(req.query.secure){
-	   // /deposits?secure=true
-	   req.session.secure = req.query.secure.toLocaleLowerCase()=="true" ? true:false 
-	   console.log("Session security was forced to be",req.session.secure)
-   }
-   if (req.session.secure == null) {
+app.use(function (req, res, next) {
+	res.locals.uname = req.session.uname;
+	if (req.query.secure) {
+		// /deposits?secure=true
+		req.session.secure = req.query.secure.toLocaleLowerCase() == "true" ? true : false
+		console.log("Session security was forced to be", req.session.secure)
+	}
+	if (req.session.secure == null) {
 		req.session.secure = true
 		console.log("resetting security mode")
-   }
-   //console.log("security mode",req.session.secure)
-   res.locals.secure = req.session.secure;
-   //console.log("save session")
-   next();
+	}
+	//console.log("security mode",req.session.secure)
+	res.locals.secure = req.session.secure;
+	//console.log("save session")
+	req.session.save((err) => {
+		if (err) {
+			console.log(err)
+		}
+		next();
+	});
+
 });
 
 /* Load EJS view engine */
@@ -44,16 +52,20 @@ app.set('view engine', 'ejs');
 
 /* body-parser used for parsing post requests as JSON */
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({
+	extended: false
+}))
 
 /* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
 const path = require('path');
 app.set('views', path.join(__dirname, 'views/'));
 app.use(express.static(__dirname + '/public'));
-app.use('/public',  express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
 
 const postgres = require('./dbcon.js');
 
@@ -61,7 +73,7 @@ const postgres = require('./dbcon.js');
  * Route handling
  ******************/
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 	// Logged in and session key exists
 	if (req.session.uname) {
 		return res.redirect('/home');

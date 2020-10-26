@@ -6,7 +6,7 @@ router.use('/',function (req, res, next) {
     console.log("i'm on an api route")
     next();
 });
-router.get('/togglesecurity', function(req, res, next) {
+router.post('/togglesecurity', function(req, res, next) {
     req.session.secure = !req.session.secure;
     console.log("Secure:",req.session.secure)
     routeUrl = req.protocol + '://' + req.get('host') + req.originalUrl
@@ -23,4 +23,5 @@ router.get('/togglesecurity', function(req, res, next) {
     });
 
 });
+
 module.exports = router;
