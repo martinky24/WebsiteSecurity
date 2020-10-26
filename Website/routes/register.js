@@ -18,13 +18,13 @@ function createLogin(user, pass, callback){
 }
 
 function createAccount(user, first, last, bday, email, uid, callback){
-    var query = `INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ('${first}', '${last}', '${bday}', '${email}', '${uid}')`
-    dbCon.runDBQuery(query);
-    
-    var routing = faker.finance.routingNumber();
-    var account = faker.finance.account()
-    var query = `INSERT INTO financial_info (user_id, routing_number, account_number, balance) VALUES ('${uid}', '${routing}', '${account}', 0.)`
-    dbCon.runDBQuery(query);
+    var query = `INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ('${first}', '${last}', '${bday}', '${email}', '${uid}')`;
+    dbCon.runDBQuery(query, (qres) => {
+        var routing = faker.finance.routingNumber();
+        var account = faker.finance.account();
+        var query = `INSERT INTO financial_info (user_id, routing_number, account_number, balance) VALUES ('${uid}', '${routing}', '${account}', 0.)`;
+        dbCon.runDBQuery(query, callback);
+    });
 }
 
 router.get('/register', function(req, res, next) {
