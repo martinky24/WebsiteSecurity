@@ -16,19 +16,31 @@ router.get('/account', function(req, res, next) {
     uid = req.session.userID;
     content.username = req.session.uname;
     content.secure = req.session.secure;
-    getAccountInfo(req.session.userID, function (results, err) {
-        if(err) {
-            console.log('getAccountInfo(...) error occured: ' + err);
-        };
-        content.first = results.rows[0].first_name;
-        content.last = results.rows[0].last_name;
-        content.birthday = results.rows[0].birth_date.toLocaleDateString("en-US");
-        content.email = results.rows[0].email;
-        content.account = results.rows[0].account_number;
-        content.routing = results.rows[0].routing_number;
-        content.balance = results.rows[0].balance;
-        res.render('pages/account', content);
-    });
+
+    if(content.username = req.session.uname = "admin"){
+            content.first = "admin";
+            content.last = "admin";
+            content.birthday = "admin";
+            content.email = "admin";
+            content.account = "admin";
+            content.routing = "admin";
+            content.balance = "admin";
+            res.render('pages/account', content);
+    } else {
+        getAccountInfo(req.session.userID, function (results, err) {
+            if(err) {
+                console.log('getAccountInfo(...) error occured: ' + err);
+            };
+            content.first = results.rows[0].first_name;
+            content.last = results.rows[0].last_name;
+            content.birthday = results.rows[0].birth_date.toLocaleDateString("en-US");
+            content.email = results.rows[0].email;
+            content.account = results.rows[0].account_number;
+            content.routing = results.rows[0].routing_number;
+            content.balance = results.rows[0].balance;
+            res.render('pages/account', content);
+        });
+    }
 });
 
 module.exports = router;
