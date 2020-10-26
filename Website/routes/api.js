@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
+var dbCon = require("./../dbcon");
+var dbMethods = require('./../dbMethods')
 
 router.use('/',function (req, res, next) {
     console.log("i'm on an api route")
@@ -21,7 +23,17 @@ router.post('/togglesecurity', function(req, res, next) {
             res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
         }
     });
+});
 
+router.post('/makedeposit', function(req, res, next) {
+    //console.log(req.body)
+    dbMethods.deposit(req.body.amount,req.session.userID,(qResult)=>{
+        if(qResult && qResult.rowCount > 0){
+            res.redirect(req.headers.referer)
+        }else{
+            res.send(`Deposit failed?`)
+        }
+    });
 });
 
 module.exports = router;
