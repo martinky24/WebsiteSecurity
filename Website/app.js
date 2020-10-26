@@ -58,7 +58,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({
-	extended: false
+	extended: true
 }))
 
 /* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
