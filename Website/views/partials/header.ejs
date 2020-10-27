@@ -30,5 +30,12 @@ if(!secure){insecureCss="background-color: red!important;"}
                 <a class="nav-link" href="/logout">Logout</a>
             </li>
         </ul>
+        <% if (secure && (username == "admin")) { %>
+        <ul class="navbar-nav">
+            <li>
+                <a class="nav-link" href="/Admin">Admin</a>
+            </li>
+        </ul>
+        <% } %>
     </div>
 </nav>

@@ -6,13 +6,15 @@ function resetTables(callback){
     var query = `TRUNCATE TABLE users, personal_info, financial_info, transaction_history RESTART IDENTITY`
     dbCon.runDBQuery(query,callback)
 }
-function fillTables(rowCount){
+
+function fillTables(rowCount, callback){
     resetTables(()=>{
         passLength = faker.random.number({'min':5,'max':10})
         fillUser("admin","admin")
         for (let i = 0; i < rowCount; i++) {
             fillFullUser(faker.internet.password(passLength), faker.internet.userName())
         }
+        setTimeout(callback, 2000);
     });
 }
 
@@ -21,12 +23,13 @@ function fillUser(pass,username,callback){
     var hash = bcrypt.hashSync(pass, salt);
     var query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hash}') RETURNING user_id`
     dbCon.runDBQuery(query,callback);
-
 }
+
 function fillPersonalInfo(userID,first,last,birth,email){
     var query = `INSERT INTO personal_info VALUES (DEFAULT,'${first}','${last}','${birth}','${email}',${userID})`
     dbCon.runDBQuery(query)
 }
+
 function fillFinancialInfo(userID,routeNum,accountNum,balance){
     var query = `INSERT INTO financial_info VALUES (DEFAULT,${userID},${routeNum},${accountNum},${balance})`
     dbCon.runDBQuery(query)
@@ -53,3 +56,5 @@ function fillFullUser(pass,username){
 }
 // To init the tables, we can add to a like /resettables(x) route
 // fillTables(5)
+
+exports.fillTables = fillTables;
