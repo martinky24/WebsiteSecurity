@@ -1,0 +1,18 @@
+<% if(locals.error && error){ %>
+    <div class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <%= error %>
+      </div>
+<% } %>
+<% if(locals.warning && warning){ %>
+    <div class="alert alert-warning alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <%= warning %>
+      </div>
+<% } %>
+<% if(locals.message && message){ %>
+    <div class="alert alert-info alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <%= message %>
+      </div>
+<% } %>
