@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var dbCon = require("./../dbcon");
+var rMethods = require('./../routeMethods');
 
 function checkValidUser(user,pass,callback){
 	var query = `SELECT TRUE as exists, password_hash, user_id FROM users WHERE username = '${user}' LIMIT 1 `
@@ -13,10 +14,9 @@ router.get('/login', function(req, res, next) {
 	if (req.session.uname) {
 		return res.redirect('/home');
 	}
-	res.render('pages/login',{
+	res.render('pages/login',Object.assign({
 		secure: req.session.secure,
-		message: req.query.message
-	});
+	},req.savedContext));
 });
 router.post('/loginUser', function(req, res, next) {
 	var password = req.body.pword;
@@ -36,7 +36,9 @@ router.post('/loginUser', function(req, res, next) {
 				res.redirect("/home");
 			});
 		} else {
-			res.redirect('/login?message=Incorrect Username or Password');
+			rMethods.saveSessionContext({error:"Incorrect Username or Password"},req,()=>{
+				res.redirect(req.headers.referer)
+			});
 		}
 	});
 });

@@ -28,12 +28,12 @@ router.post('/togglesecurity', function(req, res, next) {
 router.post('/makedeposit', function(req, res, next) {
     //console.log(req.body)
     if(req.session.uname=="admin"){
-        rMethods.saveSessionContext({info:"The user Admin does not have financial/personal info set"},req,()=>{
+        return rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req,()=>{
             res.redirect(req.headers.referer)
         });
     }
-    if(req.body.amount <= 0){
-        rMethods.saveSessionContext({warning:"The user Admin does not have financial/personal info set"},req,()=>{
+    if(!req.body.amount || req.body.amount <= 0){
+        return rMethods.saveSessionContext({warning:"The deposit amount must be a positive, non-zero number"},req,()=>{
             res.redirect(req.headers.referer)
         });
     }
