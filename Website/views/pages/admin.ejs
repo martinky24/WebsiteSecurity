@@ -1,0 +1,52 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ('./../partials/head') %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include ('./../partials/header') %>
+    </header>
+
+    <main>
+        <h2 class="centerHeader">Admin Tools <%- include('./../partials/isSecureTitle.ejs') %></h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Account ID</th>
+                    <th>User ID</th>
+                    <th>Routing Number</th>
+                    <th>Account Number</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <% for(var i=0; i < data.length; i++) { %>
+                <tr>
+                    <td><%= data[i].account_id %></td>
+                    <td><%= data[i].user_id %></td>
+                    <td><%= data[i].routing_number %></td>
+                    <td><%= data[i].account_number %></td>
+                    <td><%= data[i].balance %></td>
+                </tr>
+            <% } %>
+        </table>
+
+        <form method="post" action="/api/resettables">
+            <input type="submit" value="Reset Tables">
+        </form>
+
+    </main>
+
+    <footer>
+        <%- include ('./../partials/footer') %>
+    </footer>
+
+</body>
+
+</html>
