@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var dbCon = require("./../dbcon");
-var dbMethods = require('./../dbMethods')
-
+var dbMethods = require('./../dbMethods');
+var rMethods = require('./../routeMethods');
 router.use('/',function (req, res, next) {
     console.log("i'm on an api route")
     next();
@@ -27,11 +27,23 @@ router.post('/togglesecurity', function(req, res, next) {
 
 router.post('/makedeposit', function(req, res, next) {
     //console.log(req.body)
+    if(req.session.uname=="admin"){
+        rMethods.saveSessionContext({info:"The user Admin does not have financial/personal info set"},req,()=>{
+            res.redirect(req.headers.referer)
+        });
+    }
+    if(req.body.amount <= 0){
+        rMethods.saveSessionContext({warning:"The user Admin does not have financial/personal info set"},req,()=>{
+            res.redirect(req.headers.referer)
+        });
+    }
     dbMethods.deposit(req.body.amount,req.session.userID,(qResult)=>{
         if(qResult && qResult.rowCount > 0){
             res.redirect(req.headers.referer)
         }else{
-            res.send(`Deposit failed?`)
+            rMethods.saveSessionContext({error:"An error occured during deposit, check console for details"},req,()=>{
+                res.redirect(req.headers.referer)
+            });
         }
     });
 });

@@ -11,6 +11,8 @@ const session = require('express-session');
 
 var FileStore = require('session-file-store')(session);
 
+var rMethods = require('./routeMethods');
+
 app.use(session({
 	name: 'server-session-cookie-id',
 	secret: 'ssshhhhh',
@@ -34,16 +36,14 @@ app.use(function (req, res, next) {
 		req.session.secure = true
 		console.log("resetting security mode")
 	}
-	//console.log("security mode",req.session.secure)
 	res.locals.secure = req.session.secure;
+	//console.log("security mode",req.session.secure)
 	//console.log("save session")
-	req.session.save((err) => {
-		if (err) {
-			console.log(err)
-		}
-		next();
-	});
 
+	rMethods.addSessionContextToRequest(req,()=>{
+		next(); // function also saves session
+	});
+	
 });
 
 /* Load EJS view engine */
