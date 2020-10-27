@@ -24,7 +24,7 @@ app.use(session({
 	retries: 0
 }));
 
-// for login
+// all Routes requests hit this before proceeding
 app.use(function (req, res, next) {
 	res.locals.uname = req.session.uname;
 	if (req.query.secure) {

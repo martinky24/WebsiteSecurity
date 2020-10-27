@@ -14,9 +14,9 @@ router.get('/login', function(req, res, next) {
 	if (req.session.uname) {
 		return res.redirect('/home');
 	}
-	res.render('pages/login',Object.assign({
+	res.render('pages/login', Object.assign({
 		secure: req.session.secure,
-	},req.savedContext));
+	}, req.savedContext));
 });
 router.post('/loginUser', function(req, res, next) {
 	var password = req.body.pword;
