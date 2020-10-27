@@ -3,7 +3,7 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var dbCon = require("./../dbcon");
 var faker = require('faker'); //https://github.com/marak/Faker.js/
-
+var rMethods = require('./../routeMethods');
 
 function checkValidUsername(user, callback){
     var query = `SELECT TRUE as exists, user_id FROM users WHERE username = '${user}' LIMIT 1 `
@@ -31,10 +31,9 @@ router.get('/register', function(req, res, next) {
     if (req.session.uname) {
         return res.redirect('/home');
     }
-    res.render('pages/register',{
+    res.render('pages/register',Object.assign({
         secure: req.session.secure,
-        message: req.query.message
-    });
+    },req.savedContext));
 });
 
 router.post('/registerUser', function(req, res, next) {
@@ -48,17 +47,22 @@ router.post('/registerUser', function(req, res, next) {
 
     checkValidUsername(username, (qResult)=>{
         if (dbCon.hasQueryResult(qResult) && qResult.rows[0].exists) {
-            res.redirect('/register?message=Username exists');
+            return rMethods.saveSessionContext({warning:"Username already exists"},req,()=>{
+                res.redirect('/register')
+            });
         } else {
             createLogin(username, password, (qResult)=>{
                 uid = qResult.rows[0].user_id;
                 createAccount(username, first, last, bday, email, uid, function (results, err) {
                     if(err) {
                         console.log('createAccount(...) error occured: ' + err);
+                        return rMethods.saveSessionContext({error:"Error occurred during account creation"},req,()=>{
+                            res.redirect('/register')
+                        });
                     }
+                    res.redirect("/login");
                 });
-                res.redirect("/login");
-            })
+            });
         }
     });
 });
