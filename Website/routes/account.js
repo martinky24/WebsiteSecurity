@@ -17,7 +17,7 @@ router.get('/account', function(req, res, next) {
     content.username = req.session.uname;
     content.secure = req.session.secure;
 
-    if(req.session.uname = "admin"){
+    if(req.session.uname == "admin"){
             content.username = req.session.uname;
             content.first = "admin";
             content.last = "admin";

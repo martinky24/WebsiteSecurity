@@ -16,3 +16,9 @@
         <%= message %>
       </div>
 <% } %>
+<% if(locals.success && success){ %>
+  <div class="alert alert-primary alert-dismissible">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <%= success %>
+    </div>
+<% } %>

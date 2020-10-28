@@ -18,7 +18,7 @@ function runQuery(query,callback){
         } else {
           client.query(query, (err, res) => {
             client.end()
-            console.log(`Result of the query ${query}:\n`,"Errors:",err,"\nResults:",res)
+            //console.log(`Result of the query ${query}:\n`,"Errors:",err,"\nResults:",res)
             if(callback){
                 callback(res)
             }
