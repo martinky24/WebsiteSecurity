@@ -13,6 +13,29 @@ var FileStore = require('session-file-store')(session);
 
 var rMethods = require('./routeMethods');
 
+/* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
+const path = require('path');
+app.set('views', path.join(__dirname, 'views/'));
+
+/* Load EJS view engine */
+app.engine('ejs', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
+
+/********************
+ * MIDDLEWARE
+ ********************/
+// Set static folder
+app.use(express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
+
+/* body-parser used for parsing post requests as JSON */
+app.use(express.json());
+app.use(express.urlencoded({
+	extended: true
+}))
+
+// Set session data
 app.use(session({
 	name: 'server-session-cookie-id',
 	secret: 'ssshhhhh',
@@ -46,28 +69,6 @@ app.use(function (req, res, next) {
 	
 });
 
-/* Load EJS view engine */
-app.engine('ejs', require('ejs').renderFile);
-app.set('view engine', 'ejs');
-
-/* body-parser used for parsing post requests as JSON */
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({
-	extended: true
-}));
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(express.urlencoded({
-	extended: true
-}))
-
-/* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
-const path = require('path');
-app.set('views', path.join(__dirname, 'views/'));
-app.use(express.static(__dirname + '/public'));
-app.use('/public', express.static(__dirname + '/public'));
-
-const postgres = require('./dbcon.js');
 
 /******************
  * Route handling

@@ -35,3 +35,17 @@ sudo PORT=80 pm2 start app.js
 ```
 
 This command will run elevated since we are interfacing with a public port. Any environment variables need to passed to the sudo command or used in a config file. Running in the current environment "sudo -E" will spawn 2 PM2 processes that will conflict with each other and not hint at any issue. The result will be an hour of wasted time.
+
+
+### Database Configuration
+Database is hosted on AWS RDS, use the following to connect to postgres instance from psql:
+
+```bash
+psql -h team-web-security.cni5jxwbesmd.us-west-1.rds.amazonaws.com -p 5422 -U coreuser -W -d banking
+```
+
+The application uses environment variables to store the database username and password, set the following:
+```bash
+export $DBUSER=user
+export $DBPASS=password
+```
