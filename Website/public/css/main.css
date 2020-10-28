@@ -29,10 +29,16 @@
 
 .transferDiv {
     width: 70%;
-
 }
 
 .transferNav {
-    
     background-color: #007bff;
+}
+
+.withdrawalDiv {
+    width: 70%;
+}
+
+.withdrawalNav {
+    background-color: #c300ff;
 }
