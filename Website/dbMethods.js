@@ -20,6 +20,11 @@ function getAccountInfo(userid, callback) {
 
 // Transfer account values
 function transfer(userid, fromAccount, toAccount, amount, callback) {
+
+    // basic checks
+    if (amount < 0) {
+        callback({"Error":"Can only transfer a positive amount"});
+    }
     // get current account values
     let query = `SELECT balance FROM financial_info WHERE user_id=${userid} AND account_number=${fromAccount}`;
     dbCon.runDBQuery(query, (res) => {
