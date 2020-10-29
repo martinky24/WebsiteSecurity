@@ -11,6 +11,7 @@ function fillTables(rowCount, callback){
     resetTables(()=>{
         passLength = faker.random.number({'min':5,'max':10})
         fillUser("admin","admin")
+        fillUser("froglover420","ilovefrogs")
         for (let i = 0; i < rowCount; i++) {
             fillFullUser(faker.internet.password(passLength), faker.internet.userName())
         }
@@ -55,6 +56,6 @@ function fillFullUser(pass,username){
     });
 }
 // To init the tables, we can add to a like /resettables(x) route
-// fillTables(5)
+// fillTables(5, function() { return undefined; })
 
 exports.fillTables = fillTables;
