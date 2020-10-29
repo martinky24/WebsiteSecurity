@@ -1,6 +1,6 @@
-# Broken Authentication
+# [Broken Access Control](https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control)
 
-Broken authentication is when restrictions on what different users should and should not have access to are not correctly enforced.
+Broken Access Control is when restrictions on what different users should and should not have access to are not correctly enforced.
 
 ## Our Implementation
 
