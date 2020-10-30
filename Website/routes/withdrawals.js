@@ -31,7 +31,7 @@ router.get('/withdrawals', function(req, res, next) {
 });
 
 
-// Route to transfer specified balance
+// Withdrawal cash
 router.post("/withdrawals", async (req, res) => {
 	// Admin cannot access accounts
 	if(req.session.uname == "admin"){
@@ -41,10 +41,9 @@ router.post("/withdrawals", async (req, res) => {
 	}
 	
 	// execute withdrawal
-	
 	const result = await queries.withdrawal(req.session.userID, req.body.fromAccount, req.body.amount);
 
-	console.log(result);
+	//console.log(result);
 	if (result.Error) {
 		rMethods.saveSessionContext({error:result.Error}, req, () => {
 			res.redirect(req.headers.referer);
