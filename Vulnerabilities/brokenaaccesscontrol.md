@@ -8,7 +8,7 @@ In our app, we demonstrate a case of broken authentication by not properly locki
 
 ## Steps to Exploit
 
-1. From the insecure portion of our site, login as any non-admin user
+1. From the insecure portion of our site, login as any non-admin user (`froglover420` / `ilovefrogs`)
 2. Once logged in, go to `/admin`
 3. Note access to sensitive user banking info
 
