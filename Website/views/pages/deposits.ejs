@@ -15,8 +15,82 @@
 
     <main>
         <h2 class="centerHeader">Deposits<%- include('./../partials/isSecureTitle.ejs') %></h2>
-        <%- include ('./../partials/depositPartials/depositHeader.ejs') %>
-        <%- include ('./../partials/depositPartials/depositBody.ejs') %>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row">
+                    <span class="col-" id="username">
+                        <% if (locals.username && username) { %>
+                        User: <%= username %>
+                        <% } %>
+                    </span>
+                    <span class="col- ml-auto" id="accountid">
+                        <% if (locals.account_number && account_number) { %>
+                        Account Number: <%= account_number %>
+                        <% } %>
+                    </span>
+                </div>
+                <div class="row">
+                    <span class="col-">Balance:</span>
+                    <span id="balance" class="col">
+                        <% if (locals.balance && balance) { %>
+                        <%= balance %>
+                        <% } %>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row justify-content-center">
+                    <ul class="nav nav-pills md-tabs nav-justified col">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#deposit_info" role="tab"
+                                aria-controls="deposit_info">Deposit Info</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <form method='POST' class="needs-validation" novalidate action='/deposits'
+                            enctype="application/x-www-form-urlencoded">
+                            <div class="tab-content card">
+                                <div class="tab-pane fade in show active" id="deposit_info" role="tabpanel">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8">
+                                            <div class="form-row">
+                                                <div class="form-group col-12">
+                                                    <label for="account_number">Account Number</label>
+                                                    <input id="account_number" required name="account_number"
+                                                        type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9"
+                                                        value="">
+                                                </div>
+                                                <div class="form-group col-12">
+                                                    <label for="routing_number">Routing Number</label>
+                                                    <input id="routing_number" required name="routing_number"
+                                                        type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9"
+                                                        value="">
+                                                </div>
+                                                <div class="form-group col-12">
+                                                    <label for="check_number">Check Number</label>
+                                                    <input id="check_number" required name="check_number" type="text"
+                                                        pattern="[0-9]{4,9}" minlength="4" maxlength="9" value="">
+                                                </div>
+                                                <div class="form-group col-12">
+                                                    <label for="amount">Amount</label>
+                                                    <input id="amount" required name="amount" type="number" step="any"
+                                                        pattern="[+]?[0-9]*[.,]?[0-9]+" value="" min="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type=submit value="Deposit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
