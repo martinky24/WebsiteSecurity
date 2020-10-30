@@ -27,11 +27,12 @@
     text-align:center;
 }
 
-.transferDiv {
+.transferDiv, .depositDiv {
     width: 70%;
 }
 
-.transferNav {
+.transferNav, .depositNav {
+    
     background-color: #007bff;
 }
 
