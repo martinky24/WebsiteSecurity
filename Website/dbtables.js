@@ -11,7 +11,7 @@ function fillTables(rowCount, callback){
     resetTables(()=>{
         passLength = faker.random.number({'min':5,'max':10})
         fillUser("admin","admin")
-        fillUser("froglover420","ilovefrogs")
+        fillFullUser("froglover420","ilovefrogs")
         for (let i = 0; i < rowCount; i++) {
             fillFullUser(faker.internet.password(passLength), faker.internet.userName())
         }
