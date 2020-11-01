@@ -1,61 +1,173 @@
-var dbCon= require("./dbcon");
-var faker = require('faker'); //https://github.com/marak/Faker.js/
-var bcrypt = require('bcryptjs');
+const db = require("./dbcon");
+let faker = require('faker'); //https://github.com/marak/Faker.js/
+let bcrypt = require('bcryptjs');
 
-function resetTables(callback){
-    var query = `TRUNCATE TABLE users, personal_info, financial_info, transaction_history RESTART IDENTITY`
-    dbCon.runDBQuery(query,callback)
-}
+async function resetTables(){
+    // get client connection
+    const client = await db.pool.connect();
 
-function fillTables(rowCount, callback){
-    resetTables(()=>{
-        passLength = faker.random.number({'min':5,'max':10})
-        fillUser("admin","admin")
-        fillFullUser("froglover420","ilovefrogs")
-        for (let i = 0; i < rowCount; i++) {
-            fillFullUser(faker.internet.password(passLength), faker.internet.userName())
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        const query = `TRUNCATE TABLE users, personal_info, financial_info, transaction_history RESTART IDENTITY`;
+
+        const result = await client.query(query);
+
+        if (result) {
+            await client.query("COMMIT");
+            return result;
+        } 
+        else {                
+            throw "Error during truncation";
         }
-        setTimeout(callback, 2000);
-    });
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
+
 }
 
-function fillUser(pass,username,callback){
-    var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync(pass, salt);
-    var query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hash}') RETURNING user_id`
-    dbCon.runDBQuery(query,callback);
+async function fillTables(rowCount){
+    await resetTables().then(async function(){
+        let promises = []
+        passLength = faker.random.number({'min':5,'max':10})
+
+        promises.push(fillUser("admin","admin"),fillFullUser("froglover420","ilovefrogs"))
+        console.log("Creating dynamic users")
+        for (let i = 0; i < rowCount; i++) {
+            promises.push(fillFullUser(faker.internet.password(passLength), faker.internet.userName()))
+        }
+        await Promise.all(promises).then(()=>{
+            console.log("Finished creating all users")
+        }).catch(err=>{
+            console.log(err);
+        });
+    }).catch((err)=>{
+        console.log(err)
+    })
 }
 
-function fillPersonalInfo(userID,first,last,birth,email){
-    var query = `INSERT INTO personal_info VALUES (DEFAULT,'${first}','${last}','${birth}','${email}',${userID})`
-    dbCon.runDBQuery(query)
+async function fillUser(pass,username){
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(pass, salt);
+        const query = `INSERT INTO users VALUES (DEFAULT,'${pass}','${username}','${hash}') RETURNING user_id`
+
+        const result = await client.query(query);
+
+        if (result.rowCount == 1) {
+            await client.query("COMMIT");
+            return result;
+        } 
+        else {         
+            throw "Error during filluser()";
+        }
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
 }
 
-function fillFinancialInfo(userID,routeNum,accountNum,balance){
-    var query = `INSERT INTO financial_info VALUES (DEFAULT,${userID},${routeNum},${accountNum},${balance})`
-    dbCon.runDBQuery(query)
+async function fillPersonalInfo(userID,first,last,birth,email){
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        const query = `INSERT INTO personal_info VALUES (DEFAULT,'${first}','${last}','${birth}','${email}',${userID})`
+
+        const result = await client.query(query);
+
+        if (result) {
+            await client.query("COMMIT");
+            return result;
+        } 
+        else {                
+            throw "Error during fillPersonalInfo()";
+        }
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
 }
 
-function fillFullUser(pass,username){
-    fillUser(pass,username,(qResult)=>{
-        console.log(qResult.rows[0].user_id);
-        if(dbCon.hasQueryResult(qResult) && qResult.rows[0].user_id){
-            userID = qResult.rows[0].user_id;
+async function fillFinancialInfo(userID,routeNum,accountNum,balance){
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        const query = `INSERT INTO financial_info VALUES (DEFAULT,${userID},${routeNum},${accountNum},${balance})`
+
+        const result = await client.query(query);
+
+        if (result) {
+            await client.query("COMMIT");
+            return result;
+        } 
+        else {                
+            throw "Error during fillFinancialInfo()";
+        }
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
+}
+
+async function fillFullUser(pass,username){
+    await fillUser(pass,username).then(async function(userRes){
+        console.log(userRes.rows[0].user_id);
+        let promises = []
+        
+        if(userRes.rows.length > 0 && userRes.rows[0].user_id){
+            userID = userRes.rows[0].user_id;
             var fName = faker.name.firstName().replace("'","");
             var lName = faker.name.lastName().replace("'","");
-            fillPersonalInfo(
+            pInfoPromise = fillPersonalInfo(
                 userID, fName,
                 lName, faker.date.past(55,"1/1/2000").toLocaleDateString("en-US"),
                 faker.internet.email(fName,lName)
             );
-            fillFinancialInfo(
+            fInfoPromise = fillFinancialInfo(
                 userID, faker.finance.routingNumber(),
                 faker.finance.account(), faker.finance.amount()
             );
+            promises.push(pInfoPromise,fInfoPromise)
+            await Promise.all(promises).catch(err=>{
+                console.log(err);
+            });
+            
         }
     });
+    
 }
 // To init the tables, we can add to a like /resettables(x) route
-// fillTables(5, function() { return undefined; })
-
+//fillTables(5).then(()=>{console.log("do stuff with res")});
 exports.fillTables = fillTables;

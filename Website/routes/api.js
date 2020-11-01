@@ -19,15 +19,12 @@ router.post('/togglesecurity', function(req, res, next) {
     });
 });
 
-router.post('/resettables', function(req, res, next) {
+router.post('/resettables', async function(req, res, next) {
     if ((req.session.uname == "admin") || !req.session.secure) {
         console.log("resetting tables");
-        dbtables.fillTables(5, (results) => {
-            res.redirect(req.headers.referer)
-        });
-    } else {
-        res.redirect(req.headers.referer)
+        await dbtables.fillTables(5)
     }
+    res.redirect(req.headers.referer)
 });
 
 module.exports = router;
