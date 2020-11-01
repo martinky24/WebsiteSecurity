@@ -1,24 +1,26 @@
-function saveSessionContext(context ,req, callback){
+async function saveSessionContext(context ,req){
 // js object to be used as rendering options under other routes
     req.session.context = context;
-    req.session.save((err)=>{
-        if(err){
-            console.log("Error occurred during context saving:",err)
-        }
-        callback()
-    });
+    await saveSession(req);
 }
-function addSessionContextToRequest(req, callback){
+async function addSessionContextToRequest(req){
     req.savedContext = req.session.context;
     req.session.context = {}
-    req.session.save((err)=>{
-        if(err){
-            console.log("Error occurred during context saving:",err)
-        }
-        callback()
+    await saveSession(req);
+}
+async function saveSession(req){
+    return new Promise((resolve,reject)=>{
+        req.session.save((err)=>{
+            if(err){
+                console.log("Error occurred during saving of session:",err)
+                reject();
+            }
+            resolve();
+        });
     });
 }
 module.exports={
     saveSessionContext,
-    addSessionContextToRequest
+    addSessionContextToRequest,
+    saveSession
 }

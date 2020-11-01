@@ -33,9 +33,8 @@ router.get('/withdrawals', async function(req, res, next) {
 router.post("/withdrawals", async (req, res) => {
 	// Admin cannot access accounts
 	if(req.session.uname == "admin"){
-		return rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req,()=>{
-			res.redirect(req.headers.referer)
-		});
+		await rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req);
+        return res.redirect(req.headers.referer);
 	}
 	
 	// execute withdrawal
@@ -43,14 +42,12 @@ router.post("/withdrawals", async (req, res) => {
 
 	//console.log(result);
 	if (result.Error) {
-		rMethods.saveSessionContext({error:result.Error}, req, () => {
-			res.redirect(req.headers.referer);
-		})
+		await rMethods.saveSessionContext({error:result.Error},req);
+        return res.redirect(req.headers.referer);
 	}
 	else {
-		rMethods.saveSessionContext({success:result.Success}, req, () => {
-			res.redirect(req.headers.referer);
-		})
+		await rMethods.saveSessionContext({success:result.Success},req);
+        return res.redirect(req.headers.referer);
 	}
 
 })

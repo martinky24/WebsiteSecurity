@@ -22,27 +22,23 @@ router.post('/registerUser', async function(req, res, next) {
 
     const result = await queries.checkValidUsername(username);
     if (result.rows.length > 0 && result.rows[0].exists) {
-        return rMethods.saveSessionContext({warning:"Username already exists"},req,()=>{
-            res.redirect('/register')
-        });
+        await rMethods.saveSessionContext({warning:"Username already exists"},req);
+        return res.redirect('/register');
     } else {
         await queries.createUser(username, password).then(userRes=>{
             uid = userRes.rows[0].user_id;
-            queries.createUserInfo(first, last, bday, email, uid).then((userInfoRes)=>{
-                return rMethods.saveSessionContext({success:userInfoRes.Success},req,()=>{
-                    res.redirect("/login");
-                });
-            }).catch(err =>{
+            queries.createUserInfo(first, last, bday, email, uid).then(async (userInfoRes)=>{
+                await rMethods.saveSessionContext({success:userInfoRes.Success},req);
+                return res.redirect("/login");
+            }).catch(async err =>{
                 console.log('createUserInfo(...) error occurred: ', err);
-                return rMethods.saveSessionContext({error:"Error occurred during account creation"},req,()=>{
-                    res.redirect('/register')
-                });
+                await rMethods.saveSessionContext({error:"Error occurred during account creation"},req);
+                return res.redirect('/register');
             });
-        }).catch((err)=>{
+        }).catch(async (err)=>{
             console.log('createUser(...) error occurred: ', err);
-            return rMethods.saveSessionContext({error:"Error occurred during account creation"},req,()=>{
-                res.redirect('/register')
-            });
+            await rMethods.saveSessionContext({error:"Error occurred during account creation"},req);
+            return res.redirect('/register');
         });
     }
 });

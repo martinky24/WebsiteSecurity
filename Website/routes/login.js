@@ -25,17 +25,11 @@ router.post('/loginUser', async function(req, res, next) {
 		req.session.uname = username;
 		req.session.userID = result.rows[0].user_id // Store for easy personal/financial lookup
 		console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
-
-		req.session.save((err)=>{
-			if(err){
-				console.log(err)
-			}
-			res.redirect("/home");
-		});
+		await rMethods.saveSession(req);
+		res.redirect("/home");
 	} else {
-		rMethods.saveSessionContext({error:"Incorrect Username or Password"},req,()=>{
-			res.redirect(req.headers.referer)
-		});
+		await rMethods.saveSessionContext({error:"Incorrect Username or Password"},req);
+        return res.redirect(req.headers.referer);
 	}
 });
 

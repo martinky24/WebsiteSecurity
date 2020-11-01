@@ -31,11 +31,10 @@ router.get('/account',async function(req, res, next) {
             content.routing = results.rows[0].routing_number;
             content.balance = results.rows[0].balance;
             res.render('pages/account', content);
-        }).catch(err=>{
+        }).catch(async err=>{
             console.log('getAccountInfo(...) error occurred: ' + err);
-            return rMethods.saveSessionContext({error:"Error occurred when when trying to reach account"},req,()=>{
-                res.redirect(req.headers.referer)
-            });
+            await rMethods.saveSessionContext({error:"Error occurred when when trying to reach account"},req);
+            res.redirect(req.headers.referer);
         });
     }
 });

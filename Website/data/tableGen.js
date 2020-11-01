@@ -168,6 +168,5 @@ async function fillFullUser(pass,username){
     });
     
 }
-// To init the tables, we can add to a like /resettables(x) route
 //fillTables(5).then(()=>{console.log("do stuff with res")});
 exports.fillTables = fillTables;

@@ -1,22 +1,19 @@
 var express = require('express');
 var router = express.Router();
 let dbtables = require("../data/tableGen");
+let rMethods = require('./../routeMethods');
 
-router.post('/togglesecurity', function(req, res, next) {
+router.post('/togglesecurity', async function(req, res, next) {
     req.session.secure = !req.session.secure;
     console.log("Secure:",req.session.secure)
     routeUrl = req.protocol + '://' + req.get('host') + req.originalUrl
     // console.log("req.headers.referer",req.headers.referer,"\nrouteUrl",routeUrl)
-    req.session.save((err)=>{
-        if(err){
-            console.log(err)
-        }
-        if(req.headers.referer && req.headers.referer != routeUrl){
-            res.redirect(req.headers.referer)
-        }else{
-            res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
-        }
-    });
+    await rMethods.saveSession(req);
+    if(req.headers.referer && req.headers.referer != routeUrl){
+        res.redirect(req.headers.referer)
+    }else{
+        res.send(`toggled the site security ${(req.session.secure)?"On":"Off"}`)
+    }
 });
 
 router.post('/resettables', async function(req, res, next) {

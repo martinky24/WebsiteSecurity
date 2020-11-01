@@ -31,24 +31,21 @@ router.get('/transfers', async (req, res) => {
 router.post("/transfers", async (req, res) => {
 	// Admin cannot access accounts
 	if(req.session.uname == "admin"){
-		return rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req,()=>{
-			res.redirect(req.headers.referer)
-		});
+		await rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req);
+        return res.redirect(req.headers.referer)
 	}
-	
+
 	// handle money transfer
 	const result = await queries.transfer(req.session.userID, req.body.fromAccount, req.body.toAccount, req.body.amount)
 
 	// handle response
 	if (result.Error) {
-		rMethods.saveSessionContext({error:result.Error}, req, () => {
-			res.redirect(req.headers.referer);
-		})
+		await rMethods.saveSessionContext({error:result.Error},req);
+        return res.redirect(req.headers.referer)
 	}
 	else {
-		rMethods.saveSessionContext({success:result.Success}, req, () => {
-			res.redirect(req.headers.referer);
-		})
+		await rMethods.saveSessionContext({success:result.Success},req);
+        return res.redirect(req.headers.referer)
 	}
 })
 

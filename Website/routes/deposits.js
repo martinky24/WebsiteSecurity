@@ -29,25 +29,21 @@ router.get('/deposits',async function(req, res, next) {
 router.post('/deposits', async function(req, res, next) {
     //console.log(req.body)
     if(req.session.uname == "admin"){
-        return rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req,()=>{
-            res.redirect(req.headers.referer)
-        });
+		await rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req);
+        return res.redirect(req.headers.referer);
     }
     if(!req.body.amount || req.body.amount <= 0){
-        return rMethods.saveSessionContext({warning:"The deposit amount must be a positive, non-zero number"},req,()=>{
-            res.redirect(req.headers.referer)
-        });
+		await rMethods.saveSessionContext({warning:"The deposit amount must be a positive, non-zero number"},req);
+        return res.redirect(req.headers.referer);
 	}
 	// execute deposit
 	const result = await queries.deposit(req.session.userID, req.body.to_account, req.body.amount);
 	if (result.Error) {
-		rMethods.saveSessionContext({error:result.Error}, req, () => {
-			res.redirect(req.headers.referer);
-		})
+		await rMethods.saveSessionContext({error:result.Error},req);
+        return res.redirect(req.headers.referer);
 	}else {
-		rMethods.saveSessionContext({success:result.Success},req,()=>{
-			res.redirect(req.headers.referer)
-		});
+		await rMethods.saveSessionContext({success:result.Success},req);
+        return res.redirect(req.headers.referer);
 	}
 });
 
