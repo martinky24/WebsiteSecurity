@@ -1,14 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
+let queries = require('../data/queries')
 
-function getAccountInfo(userid, callback){
-    var query = `SELECT * FROM personal_info INNER JOIN financial_info ON personal_info.user_id = financial_info.user_id where personal_info.user_id = '${userid}'`;
-    dbCon.runDBQuery(query, callback);
-}
-
-router.get('/account', function(req, res, next) {
+router.get('/account',async function(req, res, next) {
     if (! req.session.uname) {
         return res.redirect('/login');
     }
@@ -28,10 +22,7 @@ router.get('/account', function(req, res, next) {
             content.balance = "admin";
             res.render('pages/account', content);
     } else {
-        getAccountInfo(req.session.userID, function (results, err) {
-            if(err) {
-                console.log('getAccountInfo(...) error occured: ' + err);
-            };
+        await queries.getAccountInfo(req.session.userID).then(results=>{
             content.first = results.rows[0].first_name;
             content.last = results.rows[0].last_name;
             content.birthday = results.rows[0].birth_date.toLocaleDateString("en-US");
@@ -40,6 +31,10 @@ router.get('/account', function(req, res, next) {
             content.routing = results.rows[0].routing_number;
             content.balance = results.rows[0].balance;
             res.render('pages/account', content);
+        }).catch(async err=>{
+            console.log('getAccountInfo(...) error occurred: ' + err);
+            await rMethods.saveSessionContext({error:"Error occurred when when trying to reach account"},req);
+            res.redirect(req.headers.referer);
         });
     }
 });

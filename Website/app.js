@@ -48,10 +48,10 @@ app.use(session({
 }));
 
 // all Routes requests hit this before proceeding
-app.use(function (req, res, next) {
+app.use(async function (req, res, next) {
 	res.locals.uname = req.session.uname;
 	if (req.query.secure) {
-		// /deposits?secure=true
+		// ie: /deposits?secure=true
 		req.session.secure = req.query.secure.toLocaleLowerCase() == "true" ? true : false
 		console.log("Session security was forced to be", req.session.secure)
 	}
@@ -60,13 +60,9 @@ app.use(function (req, res, next) {
 		console.log("resetting security mode")
 	}
 	res.locals.secure = req.session.secure;
-	//console.log("security mode",req.session.secure)
-	//console.log("save session")
 
-	rMethods.addSessionContextToRequest(req,()=>{
-		next(); // function also saves session
-	});
-	
+	await rMethods.addSessionContextToRequest(req);
+	next();
 });
 
 
