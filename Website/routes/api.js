@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let dbtables = require("../data/fakeGen");
+let dbtables = require("../data/tableGen");
 
 router.post('/togglesecurity', function(req, res, next) {
     req.session.secure = !req.session.secure;
