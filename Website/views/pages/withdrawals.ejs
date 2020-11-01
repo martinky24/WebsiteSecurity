@@ -14,8 +14,27 @@
     </header>
 
     <main>
-        <h2 class="centerHeader">Withdrawals<%- include('./../partials/isSecureTitle.ejs') %></h2>
-
+        <h2 class="centerHeader">Withdrawals <%- include('./../partials/isSecureTitle.ejs') %></h2>
+        <div class="container d-flex justify-content-center">
+            <div class="withdrawalDiv">
+                <div>
+                    <span>Account Number: <%=account_number%></span><br>
+                    <span>Account Balance: $<%=balance%></span>
+                </div>
+                <div class="withdrawalNav text-center">
+                    <h3 style="color: white">Withdrawal Info</h3>                                       
+                </div>
+                <form action="/withdrawals" method="POST">
+                    <input type="hidden" name="fromAccount" value="<%=account_number%>">
+                    <div class="form-group">
+                        <label for="">Withdrawal Amount:</label>
+                        <input type="number" class="form-control" id="amount" name="amount" min="0.00" step="0.01" onchange="(function(el){el.value=parseFloat(el.value).toFixed(2);})(this)" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            
+        </div>
     </main>
 
     <footer>
