@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
+let dbCon = require("./../dbcon");
 
 function getAccountsInfo(callback){
     var query = `SELECT * FROM financial_info`;

@@ -1,14 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
-var dbtables = require("./../dbtables");
-var rMethods = require('./../routeMethods');
-
-router.use('/',function (req, res, next) {
-    console.log("i'm on an api route")
-    next();
-});
+let dbtables = require("./../dbtables");
 
 router.post('/togglesecurity', function(req, res, next) {
     req.session.secure = !req.session.secure;

@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
+let dbCon = require("./../dbcon");
 
 function getAccountInfo(userid, callback){
     var query = `SELECT * FROM personal_info INNER JOIN financial_info ON personal_info.user_id = financial_info.user_id where personal_info.user_id = '${userid}'`;

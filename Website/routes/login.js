@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
-var rMethods = require('./../routeMethods');
+let bcrypt = require('bcryptjs');
+let dbCon = require("./../dbcon");
+let rMethods = require('./../routeMethods');
 
 function checkValidUser(user,pass,callback){
 	var query = `SELECT TRUE as exists, password_hash, user_id FROM users WHERE username = '${user}' LIMIT 1 `

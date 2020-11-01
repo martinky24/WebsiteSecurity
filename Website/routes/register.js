@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
-var dbCon = require("./../dbcon");
-var faker = require('faker'); //https://github.com/marak/Faker.js/
-var rMethods = require('./../routeMethods');
+let dbCon = require("./../dbcon");
+let faker = require('faker'); //https://github.com/marak/Faker.js/
+let rMethods = require('./../routeMethods');
 
 function checkValidUsername(user, callback){
     var query = `SELECT TRUE as exists, user_id FROM users WHERE username = '${user}' LIMIT 1 `
