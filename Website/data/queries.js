@@ -1,4 +1,6 @@
 const db = require("./dbcon");
+let faker = require('faker'); //https://github.com/marak/Faker.js/
+let bcrypt = require('bcryptjs');
 
 // Withdrawal money from a given account and user id
 async function withdrawal(userid, account, amount) {
@@ -174,10 +176,93 @@ async function getAllFinancialInfo(){
     return select_res;
 }
 
+async function checkValidUsername(username){
+    // get client connection
+    const client = await db.pool.connect();
+
+    const select_query = `SELECT TRUE as exists, user_id, password_hash FROM users WHERE username = '${username}' LIMIT 1 `
+    var select_res = await client.query(select_query);
+
+    client.release();
+    return select_res;
+}
+
+async function createUser(user, pass){
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        // Create hashed pass
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(pass, salt);
+        const insert_query = `INSERT INTO users (username, password, password_hash) VALUES ('${user}', '${pass}', '${hash}') RETURNING user_id`;
+        // Try to insert new user
+        const insert_res = await client.query(insert_query);
+
+        // Return new user's id
+        if (insert_res.rowCount == 1) {
+            await client.query("COMMIT");
+            return insert_res;
+        } 
+        else {                
+            throw {"Error":"User creation unsuccessful"};
+        }
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
+}
+
+async function createUserInfo(first, last, bday, email, uid){
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        
+        const routing = faker.finance.routingNumber();
+        const account = faker.finance.account();
+        let insert_query = `INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ('${first}', '${last}', '${bday}', '${email}', '${uid}');`;
+        insert_query += `INSERT INTO financial_info (user_id, routing_number, account_number, balance) VALUES ('${uid}', '${routing}', '${account}', 0.);`;
+        
+        // Try to insert new user info
+        const insert_res = await client.query(insert_query);
+
+        if (insert_res) {
+            await client.query("COMMIT");
+            return {"Success":"New user successfully created"};
+        } 
+        else {                
+            throw {"Error":"User creation unsuccessful"};
+        }
+
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to promise catch
+        throw err
+    } finally {
+        client.release();
+    }
+
+}
+
 module.exports = {
     withdrawal,
     transfer,
     deposit,
     getUserInfo,
-    getAllFinancialInfo
+    getAllFinancialInfo,
+    checkValidUsername,
+    createUser,
+    createUserInfo
 }
