@@ -162,9 +162,22 @@ async function getUserInfo(userid) {
     return select_res;
 }
 
+// Get all users' financial info  
+async function getAllFinancialInfo(){
+    // get client connection
+    const client = await db.pool.connect();
+
+    const select_query = `SELECT * FROM financial_info`;
+    var select_res = await client.query(select_query);
+
+    client.release();
+    return select_res;
+}
+
 module.exports = {
     withdrawal,
     transfer,
     deposit,
-    getUserInfo
+    getUserInfo,
+    getAllFinancialInfo
 }
