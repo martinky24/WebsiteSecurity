@@ -59,7 +59,9 @@ async function transfer(userid, fromAccount, toAccount, amount) {
         if (amount < 0) {
             throw {"Error":"Can only transfer a positive amount"};
         }
-
+        if (fromAccount == toAccount){
+            throw {"Error":"Cannot transfer to self"}
+        }
         // get current account values
         let balance_query = `SELECT balance FROM financial_info WHERE user_id=${userid} AND account_number=${fromAccount}`;
         const balance_res = await client.query(balance_query);
