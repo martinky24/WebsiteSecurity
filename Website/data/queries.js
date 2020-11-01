@@ -148,9 +148,21 @@ async function deposit(userid, account, amount) {
         client.release();
     }
 }
+// Get balance, account number, and routing number based on user id
+async function getUserInfo(userid) {
+    // get client connection
+    const client = await db.pool.connect();
+    // get account info
+    const select_query = `SELECT balance, routing_number, account_number FROM financial_info WHERE user_id=${userid}`;
+    var select_res = await client.query(select_query);
+
+    client.release();
+    return select_res;
+}
 
 module.exports = {
     withdrawal,
     transfer,
-    deposit
+    deposit,
+    getUserInfo
 }

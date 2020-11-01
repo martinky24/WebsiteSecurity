@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var dbCon = require("./../dbcon");
-var dbMethods = require('./../dbMethods');
 var dbtables = require("./../dbtables");
 var rMethods = require('./../routeMethods');
 
