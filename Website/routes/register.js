@@ -26,7 +26,7 @@ router.post('/registerUser', async function(req, res, next) {
             res.redirect('/register')
         });
     } else {
-        queries.createUser(username, password).then(userRes=>{
+        await queries.createUser(username, password).then(userRes=>{
             uid = userRes.rows[0].user_id;
             queries.createUserInfo(first, last, bday, email, uid).then((userInfoRes)=>{
                 return rMethods.saveSessionContext({success:userInfoRes.Success},req,()=>{

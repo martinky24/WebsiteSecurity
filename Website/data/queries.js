@@ -256,13 +256,26 @@ async function createUserInfo(first, last, bday, email, uid){
 
 }
 
+async function getAccountInfo(userid){
+    // get client connection
+    const client = await db.pool.connect();
+
+    const select_query = `SELECT * FROM personal_info INNER JOIN financial_info ON personal_info.user_id = financial_info.user_id where personal_info.user_id = '${userid}'`;
+    var select_res = await client.query(select_query);
+
+    client.release();
+    return select_res;
+}
+
 module.exports = {
     withdrawal,
     transfer,
-    deposit,
-    getUserInfo,
+    deposit, 
     getAllFinancialInfo,
+    getUserInfo,
+    getAccountInfo,
     checkValidUsername,
     createUser,
-    createUserInfo
+    createUserInfo,
+    
 }
