@@ -25,6 +25,7 @@
                     <h3 style="color: white">Deposit Info</h3>                                       
                 </div>
                 <form action="/deposits" method="POST">
+                    <input type="hidden" name="to_account" value="<%=account_number%>">
                     <div class="form-group">
                         <label for="account_number">Account Number</label>
                         <input id="account_number" class="form-control" required name="account_number"

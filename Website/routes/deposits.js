@@ -3,6 +3,8 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var dbMethods = require('./../dbMethods')
 var dbCon = require("./../dbcon");
+let rMethods = require("./../routeMethods");
+let queries = require("../data/queries");
 
 router.get('/deposits', function(req, res, next) {
 	if (! req.session.uname) {
@@ -29,9 +31,9 @@ router.get('/deposits', function(req, res, next) {
 	})
 });
 
-router.post('/deposits', function(req, res, next) {
+router.post('/deposits', async function(req, res, next) {
     //console.log(req.body)
-    if(req.session.uname=="admin"){
+    if(req.session.uname == "admin"){
         return rMethods.saveSessionContext({message:"The user Admin does not have financial/personal info set"},req,()=>{
             res.redirect(req.headers.referer)
         });
@@ -40,16 +42,18 @@ router.post('/deposits', function(req, res, next) {
         return rMethods.saveSessionContext({warning:"The deposit amount must be a positive, non-zero number"},req,()=>{
             res.redirect(req.headers.referer)
         });
-    }
-    dbMethods.deposit(req.body.amount,req.session.userID,(qResult)=>{
-        if(qResult && qResult.rowCount > 0){
-            res.redirect(req.headers.referer)
-        }else{
-            rMethods.saveSessionContext({error:"An error occured during deposit, check console for details"},req,()=>{
-                res.redirect(req.headers.referer)
-            });
-        }
-    });
+	}
+	// execute deposit
+	const result = await queries.deposit(req.session.userID, req.body.to_account, req.body.amount);
+	if (result.Error) {
+		rMethods.saveSessionContext({error:result.Error}, req, () => {
+			res.redirect(req.headers.referer);
+		})
+	}else {
+		rMethods.saveSessionContext({success:result.Success},req,()=>{
+			res.redirect(req.headers.referer)
+		});
+	}
 });
 
 module.exports = router;

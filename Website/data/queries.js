@@ -114,8 +114,43 @@ async function transfer(userid, fromAccount, toAccount, amount) {
     }
 }
 
+// Deposit money from a given account and user id
+async function deposit(userid, account, amount) {
+    // get client connection
+    const client = await db.pool.connect();
+
+    // begin transaction
+    try {
+        await client.query("BEGIN");
+        // Add amount to user account balance
+        const update_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE user_id=${userid} AND account_number=${account}`;
+        const update_res = await client.query(update_query);
+
+        if (update_res.rowCount == 1) {
+            await client.query("COMMIT");
+            return {"Success":"Money Successfully Deposited!"};
+        } 
+        else {                
+            throw {"Error":"Unable to deposit amount, see console."};
+        }
+    } catch(err) {
+        // Rollback transaction
+        await client.query("ROLLBACK");
+
+        // Pass error message to controller
+        if (err.Error) {
+            return err;
+        }
+        else {
+            return {"Error": "Database Error, see console."};
+        }
+    } finally {
+        client.release();
+    }
+}
 
 module.exports = {
     withdrawal,
-    transfer
+    transfer,
+    deposit
 }
