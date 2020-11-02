@@ -28,7 +28,13 @@
                     <input type="hidden" name="fromAccount" value="<%=account_number%>">
                     <div class="form-group">
                         <label for="">Transfer to Account Number:</label>
-                        <input type="number" class="form-control" id="toAccount" name="toAccount" required>
+                        <input 
+                        <% if (secure) { %>
+                            type="number"
+                        <% } else { %>
+                            type="text"
+                        <% } %>
+                         class="form-control" id="toAccount" name="toAccount" required>
                     </div>
                     <div class="form-group">
                         <label for="">Transfer Amount:</label>
