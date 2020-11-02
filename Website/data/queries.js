@@ -40,6 +40,7 @@ async function withdrawal(userid, account, amount) {
             return err;
         }
         else {
+            console.log(err)
             return {"Error": "Database Error, see console."};
         }
     } finally {
@@ -49,7 +50,7 @@ async function withdrawal(userid, account, amount) {
 
 
 // Transfer account values
-async function transfer(userid, fromAccount, toAccount, amount) {
+async function transfer(userid, fromAccount, toAccount, amount, secure) {
 
     // get client connection
     const client = await db.pool.connect();
@@ -61,7 +62,7 @@ async function transfer(userid, fromAccount, toAccount, amount) {
         if (amount < 0) {
             throw {"Error":"Can only transfer a positive amount"};
         }
-        if (fromAccount == toAccount){
+        if (secure && fromAccount == toAccount){
             throw {"Error":"Cannot transfer to self"}
         }
         // get current account values
@@ -69,23 +70,24 @@ async function transfer(userid, fromAccount, toAccount, amount) {
         const balance_res = await client.query(balance_query);
 
         // check account value is greater than amount
-        if (balance_res.rows[0].balance >= amount) {
-    
+        if (!secure || balance_res.rows[0].balance >= amount) {
+
             // check that second account exists
             let account_query = `SELECT COUNT(1) FROM financial_info WHERE account_number=${toAccount}`;
             const account_res = await client.query(account_query);
 
             // account exists
-            if (account_res.rows[0].count == 1) {
+            if (!secure || account_res.rows[0].count == 1) {
 
                 // transfer amount to separate account
-                let transferTo_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE account_number=${toAccount};`
-                let transferFrom_query = `UPDATE financial_info SET balance = balance - ${amount} WHERE account_number=${fromAccount};`
-
+                let transferTo_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE account_number=${toAccount}`
+                transferTo_query += secure? ';' : '';
+                let transferFrom_query = `UPDATE financial_info SET balance = balance - ${amount} WHERE account_number=${fromAccount}`
+                transferFrom_query += secure? ';' : '';
                 const transferTo_res = await client.query(transferTo_query);
                 const transferFrom_res = await client.query(transferFrom_query);
 
-                if (transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
+                if (!secure || transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
                     await client.query("COMMIT");
                     return {"Success":"Money successfully transferred"};
                 }
@@ -110,6 +112,7 @@ async function transfer(userid, fromAccount, toAccount, amount) {
             return err;
         }
         else {
+            console.log(err)
             return {"Error": "Database Error, see console."};
         }
     }
@@ -146,6 +149,7 @@ async function deposit(userid, account, amount) {
             return err;
         }
         else {
+            console.log(err)
             return {"Error": "Database Error, see console."};
         }
     } finally {

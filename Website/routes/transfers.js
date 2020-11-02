@@ -36,7 +36,7 @@ router.post("/transfers", async (req, res) => {
 	}
 
 	// handle money transfer
-	const result = await queries.transfer(req.session.userID, req.body.fromAccount, req.body.toAccount, req.body.amount)
+	const result = await queries.transfer(req.session.userID, req.body.fromAccount, req.body.toAccount, req.body.amount, req.session.secure)
 
 	// handle response
 	if (result.Error) {
