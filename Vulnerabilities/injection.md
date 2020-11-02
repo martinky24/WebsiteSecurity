@@ -14,6 +14,8 @@ In our app, we demonstrate a case of injection by not properly parameterizing th
 4. Enter a valid amount to transfer, ie. 1
 5. View the anticipated change in account balance above the transfer form
 
+If your injection irrepairably messed up the database, simply login as `Admin`/`Admin` and from the admin panel, reset the tables.
+
 ## How We Patched it
 
 We implemented a number of changes to combat the injection. For a simple fix we changed the account number input to be of type number. More completely, we added a checks to the account/balance to ensure that they are numerical values and also checked that each query returned a desired value such as exactly one row returned on a select statement and a count of one user was found with a given account number. If any of these checks fail our queries update queries are wrapped in a transaction that we can rollback to undo malicious input. These changes are implemented on the secure portion of our site.
