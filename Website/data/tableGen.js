@@ -37,7 +37,7 @@ async function fillTables(rowCount){
         let promises = []
         passLength = faker.random.number({'min':5,'max':10})
 
-        promises.push(fillUser("admin","admin"),fillFullUser("froglover420","ilovefrogs"))
+        promises.push(fillUser("admin","admin"),fillFullUser("ilovefrogs", "froglover420"))
         console.log("Creating dynamic users")
         for (let i = 0; i < rowCount; i++) {
             promises.push(fillFullUser(faker.internet.password(passLength), faker.internet.userName()))
