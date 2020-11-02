@@ -1,5 +1,7 @@
+1) Set environment variables for database login
+2) From within `Website` directory, run
 ```
 npm install
 node app.js
 ```
-then go to http://localhost:54545/
+3) Go to http://localhost:54545/
