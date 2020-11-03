@@ -7,18 +7,21 @@ async function withdrawal(userid, account, amount) {
     // get client connection
     const client = await db.pool.connect();
 
-    // begin transaction
+    // SECURE TRANSACTION
     try {
         await client.query("BEGIN");
-        const query = `SELECT balance FROM financial_info WHERE user_id=${userid}`;
-        const res = await client.query(query);
-
+        const query = 'SELECT balance FROM financial_info WHERE user_id=$1';
+        let values = [userid]
+        
+        const res = await client.query(query, values);
+        
         // check balance amount
         if (res.rows[0].balance >= amount) {
 
             // Subtract account balance from user account
-            const update_query = `UPDATE financial_info SET balance = balance - ${amount} WHERE user_id=${userid} AND account_number=${account}`;
-            const update_res = await client.query(update_query);
+            const update_query = 'UPDATE financial_info SET balance = balance - $1 WHERE user_id=$2 AND account_number=$3';
+            let updateValues = [amount, userid, account];
+            const update_res = await client.query(update_query, updateValues);
 
             if (update_res.rowCount == 1) {
                 await client.query("COMMIT");
@@ -58,50 +61,73 @@ async function transfer(userid, fromAccount, toAccount, amount, secure) {
         // start transaction
         await client.query("BEGIN");
 
-        // basic checks
-        if (amount < 0) {
-            throw {"Error":"Can only transfer a positive amount"};
+        // INSECURE TRANSFER
+        if (!secure) {            
+            // basic checks
+            if (amount < 0) {
+                throw {"Error":"Can only transfer a positive amount"};
+            }
+
+            // transfer amount to separate account
+            let transferTo_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE account_number=${toAccount}`
+            let transferFrom_query = `UPDATE financial_info SET balance = balance - ${amount} WHERE account_number=${fromAccount}`
+            await client.query(transferTo_query);
+            await client.query(transferFrom_query);
+
+            await client.query("COMMIT");
+            return {"Success":"Money successfully transferred"};                
         }
-        if (secure && fromAccount == toAccount){
-            throw {"Error":"Cannot transfer to self"}
-        }
-        // get current account values
-        let balance_query = `SELECT balance FROM financial_info WHERE user_id=${userid} AND account_number=${fromAccount}`;
-        const balance_res = await client.query(balance_query);
+        // SECURE TRANSFER
+        else {
+            // basic checks
+            if (amount < 0) {
+                throw {"Error":"Can only transfer a positive amount"};
+            }
+            // Check if self
+            if (fromAccount == toAccount){
+                throw {"Error":"Cannot transfer to self"}
+            }
 
-        // check account value is greater than amount
-        if (!secure || balance_res.rows[0].balance >= amount) {
+            // get current account values
+            let balance_query = 'SELECT balance FROM financial_info WHERE user_id=$1 AND account_number=$2';
+            let balanceValues = [userid, fromAccount];
+            const balance_res = await client.query(balance_query, balanceValues);
 
-            // check that second account exists
-            let account_query = `SELECT COUNT(1) FROM financial_info WHERE account_number=${toAccount}`;
-            const account_res = await client.query(account_query);
+            // check account value is greater than amount
+            if (balance_res.rows[0].balance >= amount) {
 
-            // account exists
-            if (!secure || account_res.rows[0].count == 1) {
+                // check that second account exists
+                let account_query = 'SELECT COUNT(1) FROM financial_info WHERE account_number=$1';
+                let accountValues = [toAccount];
+                const account_res = await client.query(account_query, accountValues);
 
-                // transfer amount to separate account
-                let transferTo_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE account_number=${toAccount}`
-                transferTo_query += secure? ';' : '';
-                let transferFrom_query = `UPDATE financial_info SET balance = balance - ${amount} WHERE account_number=${fromAccount}`
-                transferFrom_query += secure? ';' : '';
-                const transferTo_res = await client.query(transferTo_query);
-                const transferFrom_res = await client.query(transferFrom_query);
+                // account exists
+                if (account_res.rows[0].count == 1) {
 
-                if (!secure || transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
-                    await client.query("COMMIT");
-                    return {"Success":"Money successfully transferred"};
+                    // transfer amount to separate account
+                    let transferTo_query = 'UPDATE financial_info SET balance = balance + $1 WHERE account_number=$2';
+                    let transferToValues = [amount, toAccount];
+                    let transferFrom_query = 'UPDATE financial_info SET balance = balance - $1 WHERE account_number=$2';
+                    let transferFromValues = [amount, fromAccount];
+                    const transferTo_res = await client.query(transferTo_query, transferToValues);
+                    const transferFrom_res = await client.query(transferFrom_query, transferFromValues);
+
+                    if (transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
+                        await client.query("COMMIT");
+                        return {"Success":"Money successfully transferred"};
+                    }
+                    else {
+                        throw {"Error":"Error transferring money, see IT"};
+                    }                  
                 }
                 else {
-                    throw {"Error":"Error transferring money, see IT"};
-                }                  
+                    throw {"Error":"The account you are transferring to does not exist"};
+                }      
             }
             else {
-                throw {"Error":"The account you are transferring to does not exist"};
-            }      
-        }
-        else {
-            throw {"Error":"Not enough money in account to transfer"};
-        } 
+                throw {"Error":"Not enough money in account to transfer"};
+            } 
+        }   
     }
     catch(err) {
         // Rollback transaction
@@ -126,12 +152,13 @@ async function deposit(userid, account, amount) {
     // get client connection
     const client = await db.pool.connect();
 
-    // begin transaction
+    // SECURE TRANSACTION
     try {
         await client.query("BEGIN");
         // Add amount to user account balance
-        const update_query = `UPDATE financial_info SET balance = balance + ${amount} WHERE user_id=${userid} AND account_number=${account}`;
-        const update_res = await client.query(update_query);
+        const update_query = 'UPDATE financial_info SET balance = balance + $1 WHERE user_id=$2 AND account_number=$3';
+        let updateValues = [amount, userid, account];
+        const update_res = await client.query(update_query, updateValues);
 
         if (update_res.rowCount == 1) {
             await client.query("COMMIT");
@@ -156,13 +183,16 @@ async function deposit(userid, account, amount) {
         client.release();
     }
 }
+
 // Get balance, account number, and routing number based on user id
 async function getUserInfo(userid) {
     // get client connection
     const client = await db.pool.connect();
+    // SECURE QUERY
     // get account info
-    const select_query = `SELECT balance, routing_number, account_number FROM financial_info WHERE user_id=${userid}`;
-    var select_res = await client.query(select_query);
+    const select_query = 'SELECT balance, routing_number, account_number FROM financial_info WHERE user_id=$1';
+    let selectValues = [userid];
+    var select_res = await client.query(select_query, selectValues);
 
     client.release();
     return select_res;
@@ -184,8 +214,10 @@ async function checkValidUsername(username){
     // get client connection
     const client = await db.pool.connect();
 
-    const select_query = `SELECT TRUE as exists, user_id, password_hash FROM users WHERE username = '${username}' LIMIT 1 `
-    var select_res = await client.query(select_query);
+    // SECURE QUERY
+    const select_query = 'SELECT TRUE as exists, user_id, password_hash FROM users WHERE username = $1 LIMIT 1';
+    let selectValues = [username];
+    var select_res = await client.query(select_query, selectValues);
 
     client.release();
     return select_res;
@@ -195,15 +227,17 @@ async function createUser(user, pass){
     // get client connection
     const client = await db.pool.connect();
 
-    // begin transaction
+    // SECURE TRANSACTION
     try {
         await client.query("BEGIN");
         // Create hashed pass
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(pass, salt);
-        const insert_query = `INSERT INTO users (username, password, password_hash) VALUES ('${user}', '${pass}', '${hash}') RETURNING user_id`;
+        
         // Try to insert new user
-        const insert_res = await client.query(insert_query);
+        const insert_query = 'INSERT INTO users (username, password, password_hash) VALUES ($1, $2, $3) RETURNING user_id';
+        let insertValues = [user, pass, hash];
+        const insert_res = await client.query(insert_query, insertValues);
 
         // Return new user's id
         if (insert_res.rowCount == 1) {
@@ -228,19 +262,22 @@ async function createUserInfo(first, last, bday, email, uid){
     // get client connection
     const client = await db.pool.connect();
 
-    // begin transaction
+    // SECURE TRANSACTION
     try {
         await client.query("BEGIN");
         
         const routing = faker.finance.routingNumber();
         const account = faker.finance.account();
-        let insert_query = `INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ('${first}', '${last}', '${bday}', '${email}', '${uid}');`;
-        insert_query += `INSERT INTO financial_info (user_id, routing_number, account_number, balance) VALUES ('${uid}', '${routing}', '${account}', 0.);`;
+        let insertPerQuery = 'INSERT INTO personal_info (first_name, last_name, birth_date, email, user_id) VALUES ($1, $2, $3, $4, $5);';
+        let insertPerValues = [first, last, bday, email, uid];
+        let insertFinQuery = 'INSERT INTO financial_info (user_id, routing_number, account_number, balance) VALUES ($1, $2, $3, 0.);';
+        let insertFinValues = [uid, routing, account];
         
         // Try to insert new user info
-        const insert_res = await client.query(insert_query);
+        const insertPerRes = await client.query(insertPerQuery, insertPerValues);
+        const insertFinRes = await client.query(insertFinQuery, insertFinValues);
 
-        if (insert_res) {
+        if (insertPerRes.rowCount == 1 && insertFinRes.rowCount == 1) {
             await client.query("COMMIT");
             return {"Success":"New user successfully created"};
         } 
@@ -264,8 +301,10 @@ async function getAccountInfo(userid){
     // get client connection
     const client = await db.pool.connect();
 
-    const select_query = `SELECT * FROM personal_info INNER JOIN financial_info ON personal_info.user_id = financial_info.user_id where personal_info.user_id = '${userid}'`;
-    var select_res = await client.query(select_query);
+    // SECURE QUERY
+    const select_query = 'SELECT * FROM personal_info INNER JOIN financial_info ON personal_info.user_id = financial_info.user_id where personal_info.user_id = $1';
+    let selectValues = [userid];
+    var select_res = await client.query(select_query, selectValues);
 
     client.release();
     return select_res;
