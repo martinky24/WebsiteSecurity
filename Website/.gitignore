@@ -5,4 +5,4 @@ setenvs.sh
 *.rdb
 *.pem
 setenvs.sh
-*.log
+
