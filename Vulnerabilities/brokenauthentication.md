@@ -27,6 +27,6 @@ Note that the above are relatively close to `morgan`'s default logging informati
 2. Logout, go to the secure version, and login again with the same credentials
 3. Logout once more, go to the secure version, and login again with `admin`/`admin`
 4. Go to the admin panel
-5. CTRL+F "froglover", to which you will find a `GET` query with both the plaintext username and password.
+5. CTRL+F "froglover", to which you will find a `GET` query string with both the plaintext username and password.
 6. Note that the POST query shortly after (from the secure login) does not share this information
 
