@@ -203,7 +203,7 @@ async function getAllFinancialInfo(){
     // get client connection
     const client = await db.pool.connect();
 
-    const select_query = `SELECT * FROM financial_info`;
+    const select_query = `select username, account_id, f.user_id, routing_number, account_number, balance from financial_info f join users u on f.user_id = u.user_id;`;
     var select_res = await client.query(select_query);
 
     client.release();

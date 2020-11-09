@@ -44,7 +44,10 @@ app.use(session({
 	store: new FileStore({
 		logFn: function () {}
 	}),
-	retries: 0
+	retries: 0,
+	cookie: {
+		httpOnly: false
+	}
 }));
 
 // all Routes requests hit this before proceeding

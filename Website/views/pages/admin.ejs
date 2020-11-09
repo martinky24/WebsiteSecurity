@@ -21,19 +21,32 @@
                 <tr>
                     <th>Account ID</th>
                     <th>User ID</th>
+                    <th>Username</th>
                     <th>Routing Number</th>
                     <th>Account Number</th>
                     <th>Balance</th>
                 </tr>
             </thead>
             <% for(var i=0; i < data.length; i++) { %>
-                <tr>
-                    <td><%= data[i].account_id %></td>
-                    <td><%= data[i].user_id %></td>
-                    <td><%= data[i].routing_number %></td>
-                    <td><%= data[i].account_number %></td>
-                    <td><%= data[i].balance %></td>
-                </tr>
+                <% if(secure) { %>
+                    <tr>
+                        <td><%= data[i].account_id %></td>
+                        <td><%= data[i].user_id %></td>
+                        <td><%= data[i].username %></td>
+                        <td><%= data[i].routing_number %></td>
+                        <td><%= data[i].account_number %></td>
+                        <td><%= data[i].balance %></td>
+                    </tr>
+                <% } else { %>
+                    <tr>
+                        <td><%- data[i].account_id %></td>
+                        <td><%- data[i].user_id %></td>
+                        <td><%- data[i].username %></td>
+                        <td><%- data[i].routing_number %></td>
+                        <td><%- data[i].account_number %></td>
+                        <td><%- data[i].balance %></td>
+                    </tr>
+                <% } %>
             <% } %>
         </table>
 
