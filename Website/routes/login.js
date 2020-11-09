@@ -14,9 +14,14 @@ router.get('/login', function(req, res, next) {
 	}, req.savedContext));
 });
 
-router.get('/loginUserInsecure', async function(req, res, next) {
-	var password = req.query.pword;
-	var username = req.query.loginUsername
+var loginUser = async function loginUserAction(req, res, next){
+	if (req.session.secure) {
+		var password = req.body.pword;
+		var username = req.body.loginUsername;
+	} else {
+		var password = req.query.pword;
+		var username = req.query.loginUsername;
+	}
 	
 	// check if username exists and get hashedpass
 	const result = await queries.checkValidUsername(username);
@@ -30,29 +35,12 @@ router.get('/loginUserInsecure', async function(req, res, next) {
 		res.redirect("/home");
 	} else {
 		await rMethods.saveSessionContext({error:"Incorrect Username or Password"},req);
-        return res.redirect(req.headers.referer);
+		return res.redirect(req.headers.referer);
 	}
-});
+}
 
-router.post('/loginUser', async function(req, res, next) {
-	var password = req.body.pword;
-	var username = req.body.loginUsername
-	
-	// check if username exists and get hashedpass
-	const result = await queries.checkValidUsername(username);
-
-	// check if password matches hashed
-	if (result.rows.length > 0 && bcrypt.compareSync(password, result.rows[0].password_hash)) {
-		req.session.uname = username;
-		req.session.userID = result.rows[0].user_id // Store for easy personal/financial lookup
-		console.log('Securely logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
-		await rMethods.saveSession(req);
-		res.redirect("/home");
-	} else {
-		await rMethods.saveSessionContext({error:"Incorrect Username or Password"},req);
-        return res.redirect(req.headers.referer);
-	}
-});
+router.get('/loginUserInsecure', loginUser);
+router.post('/loginUser', loginUser);
 
 router.get('/logout', function(req, res, next) {
 	console.log('Logging out as user ' + req.session.uname);
