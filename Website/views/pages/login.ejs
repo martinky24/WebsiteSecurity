@@ -20,7 +20,12 @@
                 <div class="row">
                     <div class="col"></div>
                     <div class="col">
-                        <form class="formTableLogin" action="/loginUser" method="post">
+                        <% if (secure) { %>
+                            <form class="formTableLogin" action="/loginUser" method="post">
+                        <% } else { %>
+                            <form class="formTableLogin" action="/loginUserInsecure" method="get">
+                        <% } %>
+                        
                             <div class="formPairLogin">
                                 <label class="formLabelLogin" for="loginUsername"><b>Username:</b></label>
                                 <input class="formInputLogin" type="text" id="loginUsername" name="loginUsername"><br><br>
