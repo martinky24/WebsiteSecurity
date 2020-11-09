@@ -9,6 +9,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "faker": "^5.1.0",
+    "morgan": "^1.10.0",
     "path": "^0.12.7",
     "pg": "^8.4.1",
     "session-file-store": "^1.4.0"
