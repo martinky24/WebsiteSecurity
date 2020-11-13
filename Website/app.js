@@ -6,15 +6,23 @@
 var express = require('express');
 var app = express();
 
+/* logging middleware https://github.com/expressjs/morgan */
+var morgan = require('morgan');
+var fs = require('fs');
+const path = require('path');
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' });
+
+// setup the logger
+app.use(morgan(':date[web] :method :url :status', { stream: accessLogStream }));
+
 /*  Express-session for storing session values */
 const session = require('express-session');
-
 var FileStore = require('session-file-store')(session);
-
 var rMethods = require('./routeMethods');
 
 /* This allows accessing resources using '/resource' instead of '/public/resource' (CSS, Images, etc...) */
-const path = require('path');
 app.set('views', path.join(__dirname, 'views/'));
 
 /* Load EJS view engine */

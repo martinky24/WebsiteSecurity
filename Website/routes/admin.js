@@ -3,7 +3,8 @@ var router = express.Router();
 const queries = require("../data/queries");
 const rMethods = require('./../routeMethods');
 const xmlparser = require("express-xml-bodyparser");
-  
+const fs = require('fs');
+
 router.get('/admin', async function (req, res, next) {
     content = [];
     content.username = req.session.uname;
@@ -89,5 +90,23 @@ async function processUpload(req,res,next){
 
 router.post('/uploadAccount', xmlparser({trim: false, explicitArray: false,strict:false,async:true}), 
 processUpload);
+router.get('/logs', async function(req, res, next) {
+    if ((req.session.secure) && (req.session.uname != "admin")) {
+        return res.redirect('/home');
+    }
+    res.sendFile('logs/access.log', { root: '.' })
+});
+
+router.post('/resetlogs', async function(req, res, next) {
+    if ((req.session.secure) && (req.session.uname != "admin")) {
+        return res.redirect('/home');
+    }
+    var options = { flag : 'w' };
+    fs.writeFile('logs/access.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('file saved');
+    });
+    res.redirect("/admin");
+});
 
 module.exports = router;
