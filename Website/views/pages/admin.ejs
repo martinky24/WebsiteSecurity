@@ -36,7 +36,11 @@
                 </tr>
             <% } %>
         </table>
-
+        <form method="post" id="xmlForm" action="/uploadAccount" enctype="multipart/form-data">
+            <label for="xmlFile">Upload a new User Account</label><br>
+            <input type="file" id="xmlFile" accept=".xml" required><br>
+            <input type="submit" value="Upload" onclick="event.preventDefault(); sendXMLFile()">
+        </form>
         <form method="post" action="/api/resettables">
             <input type="submit" value="Reset Tables">
         </form>
@@ -44,6 +48,29 @@
     </main>
 
     <footer>
+        <script>
+            function sendXMLFile(){
+                const destination = document.getElementById("xmlForm").getAttribute("action");
+                const file = document.getElementById("xmlFile").files
+                
+                const fReader = new FileReader();
+                let xml;
+                fReader.readAsText(file[0]);
+                fReader.onload = function(e) {
+                    xml = e.target.result;
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", destination);
+                    xhttp.onreadystatechange = () => {
+                        if (xhttp.readyState == 4 && (xhttp.status == 200 || xhttp.status == 520)) {
+                            // refresh page
+                            location.reload()
+                        }
+                    };
+                    xhttp.setRequestHeader("Content-Type", "text/xml");
+                    xhttp.send(xml);
+                };
+            }
+        </script>
         <%- include ('./../partials/footer') %>
     </footer>
 

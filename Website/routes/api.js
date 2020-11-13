@@ -20,6 +20,9 @@ router.post('/resettables', async function(req, res, next) {
     if ((req.session.uname == "admin") || !req.session.secure) {
         console.log("resetting tables");
         await dbtables.fillTables(5)
+        await rMethods.saveSessionContext({
+            success: "All Users successfully reset"
+        }, req);
     }
     res.redirect(req.headers.referer)
 });
