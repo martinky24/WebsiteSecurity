@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<account>
+    <username>new</username>
+    <password>new</password>
+    <personal>
+        <first_name>joe</first_name>
+        <last_name>doe</last_name>
+        <email>joedoe@gmail.com</email>
+        <date_of_birth>05/20/1994</date_of_birth>
+    </personal>
+</account>
