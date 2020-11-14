@@ -1,10 +1,13 @@
-# [securitymisconfiguration](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration)
+# [Security Misconfiguration](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration)
 
 Security Misconfiguration is when application settings, tools, or services allow for unintended access or functionality. This could be returning server error stack
 traces to the client or the default configurations for a certain framework allowing all users admin-like usage.
+
 ## Our Implementation
 
-In our app, we demonstrate a case of injection by not properly parameterizing the "transfers" portion of our site. In both the insecure and secure versions of our website, a destination account number and amount is prompted from the user. However, in the insecure version of our website, the user can enter any string into the account number input, and the server does not perform checks to ensure that the account number is numerical. This allows the user to manipulate the transfer query directly.
+Before our patch, the whole website ran queries using a superuser database role. We changed this to having an limited privilege admin and basic user roles.
+The transfer page which was vulnerable to sql injection was a good place to test the vulnerability since we need to see if the user can execute
+a truncate query which does is not allowed for the basicuser role but is for the superuser role.
 
 ## Steps to Exploit
 
