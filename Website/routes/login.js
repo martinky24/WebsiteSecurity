@@ -3,6 +3,7 @@ var router = express.Router();
 let bcrypt = require('bcryptjs');
 let rMethods = require('./../routeMethods');
 let queries = require('../data/queries');
+var fs = require('fs');
 
 router.get('/login', function(req, res, next) {
 
@@ -31,6 +32,11 @@ var loginUser = async function loginUserAction(req, res, next){
 		req.session.uname = username;
 		req.session.userID = result.rows[0].user_id // Store for easy personal/financial lookup
 		console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
+
+		if(req.session.secure){
+			fs.appendFileSync('logs/access.log', 'Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
+		}
+
 		await rMethods.saveSession(req);
 		res.redirect("/home");
 	} else {
