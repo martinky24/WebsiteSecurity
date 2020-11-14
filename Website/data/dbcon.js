@@ -19,9 +19,18 @@ const adminPool = new Pool({
     password: process.env.DBADMINPASS,
     port: 5422
 })
+// Superuser Connection
+const superPool = new Pool({
+    user: process.env.DBCOREUSER,
+    host: 'team-web-security.cni5jxwbesmd.us-west-1.rds.amazonaws.com',
+    database: 'banking',
+    password: process.env.DBCOREPASS,
+    port: 5422
+})
 module.exports = {
     pool,
-    adminPool
+    adminPool,
+    superPool,
 }
 
 
