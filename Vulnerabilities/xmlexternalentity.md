@@ -1,4 +1,4 @@
-# [XML External Entities](https://owasp.org/www-project-top-ten/2017/A1_2017-Injection)
+# [XML External Entities](https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE))
 
 The XML External Entity vulnerability is when an XML file contains an external entity which is then expanded/evaluated by a parser.
 This entity can access the server's file system and retrieve restricted data.
