@@ -56,7 +56,9 @@ async function withdrawal(userid, account, amount) {
 async function transfer(userid, fromAccount, toAccount, amount, secure) {
 
     // get client connection
-    const client = await db.pool.connect();
+    const client = await (
+        (secure) ? db.pool : db.superPool
+    ).connect();
     try {
         // start transaction
         await client.query("BEGIN");
@@ -320,5 +322,4 @@ module.exports = {
     checkValidUsername,
     createUser,
     createUserInfo,
-    
 }
