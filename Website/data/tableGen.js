@@ -4,7 +4,7 @@ let bcrypt = require('bcryptjs');
 
 async function resetTables(){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // begin transaction
     try {
@@ -54,7 +54,7 @@ async function fillTables(rowCount){
 
 async function fillUser(pass,username){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // begin transaction
     try {
@@ -85,7 +85,7 @@ async function fillUser(pass,username){
 
 async function fillPersonalInfo(userID,first,last,birth,email){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // begin transaction
     try {
@@ -114,7 +114,7 @@ async function fillPersonalInfo(userID,first,last,birth,email){
 
 async function fillFinancialInfo(userID,routeNum,accountNum,balance){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // begin transaction
     try {
