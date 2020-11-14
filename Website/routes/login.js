@@ -30,7 +30,7 @@ var loginUser = async function loginUserAction(req, res, next){
 	if (result.rows.length > 0 && bcrypt.compareSync(password, result.rows[0].password_hash)) {
 		req.session.uname = username;
 		req.session.userID = result.rows[0].user_id // Store for easy personal/financial lookup
-		console.log('Insecurely logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
+		console.log('Logging in as user ',req.session.uname, "\nWith uid:", req.session.userID);
 		await rMethods.saveSession(req);
 		res.redirect("/home");
 	} else {
