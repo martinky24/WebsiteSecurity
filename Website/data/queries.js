@@ -227,7 +227,7 @@ async function checkValidUsername(username){
 
 async function createUser(user, pass){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // SECURE TRANSACTION
     try {
@@ -262,7 +262,7 @@ async function createUser(user, pass){
 
 async function createUserInfo(first, last, bday, email, uid){
     // get client connection
-    const client = await db.pool.connect();
+    const client = await db.adminPool.connect();
 
     // SECURE TRANSACTION
     try {
