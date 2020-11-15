@@ -21,36 +21,56 @@
                 <tr>
                     <th>Account ID</th>
                     <th>User ID</th>
+                    <th>Username</th>
                     <th>Routing Number</th>
                     <th>Account Number</th>
                     <th>Balance</th>
                 </tr>
             </thead>
             <% for(var i=0; i < data.length; i++) { %>
-                <tr>
-                    <td><%= data[i].account_id %></td>
-                    <td><%= data[i].user_id %></td>
-                    <td><%= data[i].routing_number %></td>
-                    <td><%= data[i].account_number %></td>
-                    <td><%= data[i].balance %></td>
-                </tr>
+                <% if(secure) { %>
+                    <tr>
+                        <td><%= data[i].account_id %></td>
+                        <td><%= data[i].user_id %></td>
+                        <td><%= data[i].username %></td>
+                        <td><%= data[i].routing_number %></td>
+                        <td><%= data[i].account_number %></td>
+                        <td><%= data[i].balance %></td>
+                    </tr>
+                <% } else { %>
+                    <tr>
+                        <td><%- data[i].account_id %></td>
+                        <td><%- data[i].user_id %></td>
+                        <td><%- data[i].username %></td>
+                        <td><%- data[i].routing_number %></td>
+                        <td><%- data[i].account_number %></td>
+                        <td><%- data[i].balance %></td>
+                    </tr>
+                <% } %>
             <% } %>
         </table>
-
+        
         <div class="jumbotron jumbotron-fluid" style="background:transparent !important">
             <div class="container">
                 <div class="float-left">
+                    <form method="post" id="xmlForm" action="/uploadAccount" enctype="multipart/form-data">
+                        <label for="xmlFile">User Account Creation (XML Upload)</label><br>
+                        <input type="file" id="xmlFile" accept=".xml" required><br>
+                        <input type="submit" value="Upload" onclick="event.preventDefault(); sendXMLFile()">
+                    </form>
+                </div>
+                <div class="float-left">
                     <form method="get" action="/logs" class="adminButton">
+                        <label>Manage Logs</label><br>
                         <input type="submit" value="View site logs">
                     </form>
-
                     <form method="post" action="/resetlogs" class="adminButton">
                         <input type="submit" value="Reset logs">
                     </form>
                 </div>
-
                 <div class="float-right" class="adminButton">
                     <form method="post" action="/api/resettables">
+                        <label>Manage Table</label><br>
                         <input type="submit" value="Reset Data Tables">
                     </form>
                 </div>
@@ -59,6 +79,29 @@
     </main>
 
     <footer>
+        <script>
+            function sendXMLFile(){
+                const destination = document.getElementById("xmlForm").getAttribute("action");
+                const file = document.getElementById("xmlFile").files
+                
+                const fReader = new FileReader();
+                let xml;
+                fReader.readAsText(file[0]);
+                fReader.onload = function(e) {
+                    xml = e.target.result;
+                    const xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", destination);
+                    xhttp.onreadystatechange = () => {
+                        if (xhttp.readyState == 4 && (xhttp.status == 200 || xhttp.status == 520)) {
+                            // refresh page
+                            location.reload()
+                        }
+                    };
+                    xhttp.setRequestHeader("Content-Type", "text/xml");
+                    xhttp.send(xml);
+                };
+            }
+        </script>
         <%- include ('./../partials/footer') %>
     </footer>
 
