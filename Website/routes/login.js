@@ -35,7 +35,7 @@ var loginUser = async function loginUserAction(req, res, next){
 
 		if(req.session.secure){
 			fs.appendFileSync('logs/logins.log', new Date().toISOString() + ': Logging in as user ' + 
-				req.session.uname + 'with uid:' + req.session.userID + '\n');
+				req.session.uname + ' with uid:' + req.session.userID + '\n');
 		}
 
 		await rMethods.saveSession(req);
