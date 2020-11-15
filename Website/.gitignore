@@ -4,4 +4,6 @@ sessions/
 setenvs.sh
 *.rdb
 *.pem
-setenvs.sh
+*.key
+*.crt
+setenv.sh

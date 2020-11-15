@@ -2,20 +2,23 @@
  * Load required packages, mostly boilerplate
  ******************/
 
-/* Express for route handling */
-var express = require('express');
-var app = express();
-
 /* logging middleware https://github.com/expressjs/morgan */
 var morgan = require('morgan');
 var fs = require('fs');
 const path = require('path');
 
-// create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' });
+// configure ssl
+var http = require("http");
+const httpPort = process.env.httpPort;
+const httpsPort = process.env.httpsPort;
+var https = require("https");
+var privateKey = fs.readFileSync("localhost.key", "utf8");
+var certificate = fs.readFileSync("localhost.crt", "utf8");
+var credentials = {key: privateKey, cert: certificate};
 
-// setup the logger
-app.use(morgan(':date[web] :method :url :status', { stream: accessLogStream }));
+/* Express for route handling */
+var express = require('express');
+var app = express();
 
 /*  Express-session for storing session values */
 const session = require('express-session');
@@ -33,6 +36,12 @@ app.set('view engine', 'ejs');
 /********************
  * MIDDLEWARE
  ********************/
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' });
+
+// setup the logger
+app.use(morgan(':date[web] :method :url :status', { stream: accessLogStream }));
+
 // Set static folder
 app.use(express.static(__dirname + '/public'));
 app.use('/public', express.static(__dirname + '/public'));
@@ -73,6 +82,17 @@ app.use(async function (req, res, next) {
 	res.locals.secure = req.session.secure;
 
 	await rMethods.addSessionContextToRequest(req);
+
+	// Redirect to https if session is secure and currently on http
+	if (req.session.secure && req.protocol != "https") {
+		console.log("Redirecting to https secure site.");
+		return res.redirect("https://" + req.hostname + ":" + httpsPort + req.originalUrl);
+	}
+	// Redirect to http if session is not secure and currently on https
+	if (!req.session.secure && req.protocol == "https") {
+		console.log("Redirecting to http insecure site.");
+		return res.redirect("http://" + req.hostname + ":" + httpPort + req.originalUrl);
+	}
 	next();
 });
 
@@ -132,9 +152,14 @@ app.use(function (err, req, res, next) {
 /******************
  * Launch communication
  ******************/
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
 
-const port = process.env.PORT || 54545;
-app.listen(port);
-console.log('Local server is running at http://localhost:' + port + '/.\nCMD+C to quit.');
+httpServer.listen(httpPort);
+httpsServer.listen(httpsPort);
+
+//const port = 54545;
+//app.listen(port);
+console.log('Local server is running at http://localhost:8080' + '/.\nCMD+C to quit.');
 
 module.exports = app;
