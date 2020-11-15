@@ -104,7 +104,23 @@ router.post('/resetlogs', async function(req, res, next) {
     var options = { flag : 'w' };
     fs.writeFile('logs/access.log', "", options, function(err) {
         if (err) throw err;
-        console.log('file saved');
+        console.log('access file reset');
+    });
+    fs.writeFile('logs/deposits.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('deposits file reset');
+    });
+    fs.writeFile('logs/transfers.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('transfers file reset');
+    });
+    fs.writeFile('logs/logins.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('logins file reset');
+    });
+    fs.writeFile('logs/withdrawals.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('withdrawals file reset');
     });
     res.redirect("/admin");
 });
