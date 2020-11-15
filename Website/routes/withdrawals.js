@@ -38,7 +38,7 @@ router.post("/withdrawals", async (req, res) => {
 	}
 	
 	// execute withdrawal
-	const result = await queries.withdrawal(req.session.userID, req.body.fromAccount, req.body.amount);
+	const result = await queries.withdrawal(req.session.userID, req.body.fromAccount, req.body.amount, req.session.secure);
 
 	//console.log(result);
 	if (result.Error) {
