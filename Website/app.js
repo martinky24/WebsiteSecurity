@@ -12,8 +12,8 @@ var http = require("http");
 const httpPort = process.env.httpPort;
 const httpsPort = process.env.httpsPort;
 var https = require("https");
-var privateKey = fs.readFileSync(process.env.privkey, "utf8");
-var certificate = fs.readFileSync(process.env.cert, "utf8");
+var privateKey = fs.readFileSync(process.env.PRIVKEY, "utf8");
+var certificate = fs.readFileSync(process.env.CERT, "utf8");
 var credentials = {key: privateKey, cert: certificate};
 
 /* Express for route handling */
@@ -159,7 +159,7 @@ httpServer.listen(httpPort);
 httpsServer.listen(httpsPort);
 
 //const port = 54545;
-//app.listen(port);
-console.log('Local server is running at http://localhost:8080' + '/.\nCMD+C to quit.');
+console.log('Local server is running at insecure http://localhost:' + httpPort);
+console.log('Local server is running at secure https://localhost:' + httpsPort)
 
 module.exports = app;
