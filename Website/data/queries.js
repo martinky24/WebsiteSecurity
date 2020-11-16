@@ -1,9 +1,10 @@
 const db = require("./dbcon");
 let faker = require('faker'); //https://github.com/marak/Faker.js/
 let bcrypt = require('bcryptjs');
+let fs = require('fs');
 
 // Withdrawal money from a given account and user id
-async function withdrawal(userid, account, amount) {
+async function withdrawal(userid, account, amount, secure) {
     // get client connection
     const client = await db.pool.connect();
 
@@ -25,6 +26,10 @@ async function withdrawal(userid, account, amount) {
 
             if (update_res.rowCount == 1) {
                 await client.query("COMMIT");
+                if(secure){
+                    fs.appendFileSync('logs/withdrawals.log', `${new Date().toISOString()}: ${amount} withdrawn from account ` +
+                        `${account} \n`);
+                }
                 return {"Success":"Money Successfully Withdrawn!"};
             } 
             else {                
@@ -116,6 +121,10 @@ async function transfer(userid, fromAccount, toAccount, amount, secure) {
 
                     if (transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
                         await client.query("COMMIT");
+                        if(secure){
+                            fs.appendFileSync('logs/transfers.log', `${new Date().toISOString()}: ${amount} transferred from account `
+                                + `${fromAccount} to account ${toAccount}\n`);
+                        }
                         return {"Success":"Money successfully transferred"};
                     }
                     else {
@@ -150,7 +159,7 @@ async function transfer(userid, fromAccount, toAccount, amount, secure) {
 }
 
 // Deposit money from a given account and user id
-async function deposit(userid, account, amount) {
+async function deposit(userid, account, amount, secure) {
     // get client connection
     const client = await db.pool.connect();
 
@@ -164,9 +173,13 @@ async function deposit(userid, account, amount) {
 
         if (update_res.rowCount == 1) {
             await client.query("COMMIT");
+            if(secure){
+                fs.appendFileSync('logs/deposits.log', `${new Date().toISOString()}: ${amount} deposit into account `
+                    + `${account} \n`);
+            }
             return {"Success":"Money Successfully Deposited!"};
         } 
-        else {                
+        else {
             throw {"Error":"Unable to deposit amount, see console."};
         }
     } catch(err) {

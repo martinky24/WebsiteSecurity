@@ -37,7 +37,7 @@ router.post('/deposits', async function(req, res, next) {
         return res.redirect(req.headers.referer);
 	}
 	// execute deposit
-	const result = await queries.deposit(req.session.userID, req.body.to_account, req.body.amount);
+	const result = await queries.deposit(req.session.userID, req.body.to_account, req.body.amount, req.session.secure);
 	if (result.Error) {
 		await rMethods.saveSessionContext({error:result.Error},req);
         return res.redirect(req.headers.referer);
