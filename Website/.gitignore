@@ -7,3 +7,5 @@ setenvs.sh
 *.key
 *.crt
 setenv.sh
+sslcerts/
+

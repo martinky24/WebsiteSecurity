@@ -12,8 +12,8 @@ var http = require("http");
 const httpPort = process.env.httpPort;
 const httpsPort = process.env.httpsPort;
 var https = require("https");
-var privateKey = fs.readFileSync("localhost.key", "utf8");
-var certificate = fs.readFileSync("localhost.crt", "utf8");
+var privateKey = fs.readFileSync(process.env.privkey, "utf8");
+var certificate = fs.readFileSync(process.env.cert, "utf8");
 var credentials = {key: privateKey, cert: certificate};
 
 /* Express for route handling */
