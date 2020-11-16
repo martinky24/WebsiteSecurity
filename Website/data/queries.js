@@ -27,8 +27,8 @@ async function withdrawal(userid, account, amount, secure) {
             if (update_res.rowCount == 1) {
                 await client.query("COMMIT");
                 if(secure){
-                    fs.appendFileSync('logs/withdrawals.log', new Date().toISOString() + ': ' + amount + ' withdrawn from account '
-                        + account + '\n');
+                    fs.appendFileSync('logs/withdrawals.log', `${new Date().toISOString()}: ${amount} withdrawn from account ` +
+                        `${account} \n`);
                 }
                 return {"Success":"Money Successfully Withdrawn!"};
             } 
@@ -122,8 +122,8 @@ async function transfer(userid, fromAccount, toAccount, amount, secure) {
                     if (transferTo_res.rowCount == 1 && transferFrom_res.rowCount == 1) {
                         await client.query("COMMIT");
                         if(secure){
-                            fs.appendFileSync('logs/transfers.log', new Date().toISOString() + ': ' + amount + ' transferred from account '
-                                + fromAccount + ' to account ' + toAccount + '\n');
+                            fs.appendFileSync('logs/transfers.log', `${new Date().toISOString()}: ${amount} transferred from account `
+                                + `${fromAccount} to account ${toAccount}\n`);
                         }
                         return {"Success":"Money successfully transferred"};
                     }
@@ -174,8 +174,8 @@ async function deposit(userid, account, amount, secure) {
         if (update_res.rowCount == 1) {
             await client.query("COMMIT");
             if(secure){
-                fs.appendFileSync('logs/deposits.log', new Date().toISOString() + ': ' + amount + ' deposit into account '
-                    + account + '\n');
+                fs.appendFileSync('logs/deposits.log', `${new Date().toISOString()}: ${amount} deposit into account `
+                    + `${account} \n`);
             }
             return {"Success":"Money Successfully Deposited!"};
         } 
