@@ -90,11 +90,19 @@ async function processUpload(req,res,next){
 
 router.post('/uploadAccount', xmlparser({trim: false, explicitArray: false,strict:false,async:true}), 
 processUpload);
-router.get('/logs', async function(req, res, next) {
+
+router.get('/access-logs', async function(req, res, next) {
     if ((req.session.secure) && (req.session.uname != "admin")) {
         return res.redirect('/home');
     }
     res.sendFile('logs/access.log', { root: '.' })
+});
+
+router.get('/deposit-logs', async function(req, res, next) {
+    if ((req.session.secure) && (req.session.uname != "admin")) {
+        return res.redirect('/home');
+    }
+    res.sendFile('logs/deposits.log', { root: '.' })
 });
 
 router.post('/resetlogs', async function(req, res, next) {
@@ -104,7 +112,23 @@ router.post('/resetlogs', async function(req, res, next) {
     var options = { flag : 'w' };
     fs.writeFile('logs/access.log', "", options, function(err) {
         if (err) throw err;
-        console.log('file saved');
+        console.log('access file reset');
+    });
+    fs.writeFile('logs/deposits.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('deposits file reset');
+    });
+    fs.writeFile('logs/transfers.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('transfers file reset');
+    });
+    fs.writeFile('logs/logins.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('logins file reset');
+    });
+    fs.writeFile('logs/withdrawals.log', "", options, function(err) {
+        if (err) throw err;
+        console.log('withdrawals file reset');
     });
     res.redirect("/admin");
 });
