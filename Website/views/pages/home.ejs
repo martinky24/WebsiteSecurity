@@ -26,6 +26,10 @@ $(function () {
         <h2 class="centerHeader">Homepage <%- include('./../partials/isSecureTitle.ejs') %></h2>
 
         <ul>
+            <!-- the goal is to get data-target to fire in insecure, but not secure. Resources: 
+                https://www.reddit.com/r/AskNetsec/comments/bokjrh/cve20198331_how_can_this_be_used_for_an_attack/
+                
+            -->
             <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top" data-target="<img src=x onerror=alert(0)>">Tooltip on top</button>
             <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left" data-target="<img src=x onerror=alert(0)>">Tooltip on left</button>
 
