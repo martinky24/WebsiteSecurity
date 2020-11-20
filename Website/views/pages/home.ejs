@@ -7,6 +7,15 @@
     <%- include ('./../partials/head') %>
 </head>
 
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({
+    /* script handling explained here: https://stackoverflow.com/a/1659762 <script>alert(123)</scr'+'ipt>*/
+    /*template: '<div class="tooltip tooltip-custom"><div class="title">Test</div><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'*/
+  })
+})
+</script>
+
 <body class="container">
 
     <header>
@@ -17,6 +26,9 @@
         <h2 class="centerHeader">Homepage <%- include('./../partials/isSecureTitle.ejs') %></h2>
 
         <ul>
+            <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top" data-target="<img src=x onerror=alert(0)>">Tooltip on top</button>
+            <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left" data-target="<img src=x onerror=alert(0)>">Tooltip on left</button>
+
             <li><a href="https://github.com/martinky24/WebsiteSecurity/blob/main/Vulnerabilities/injection.md"><b>Injection</b></a></li>
             <li><a href="https://github.com/martinky24/WebsiteSecurity/blob/main/Vulnerabilities/brokenauthentication.md"><b>Broken Authentication</b></a></li>
             <li>Sensitive Data Exposure</li>
