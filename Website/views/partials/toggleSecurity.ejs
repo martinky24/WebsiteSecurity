@@ -1,9 +1,23 @@
+
+<script type="text/javascript">
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip({
+    /* script handling explained here: https://stackoverflow.com/a/1659762 */
+    template: '<div class="tooltip tooltip-custom"><div class="tooltip-arrow"></div><script>alert(\'This is a component with a known vulnerability!\')</scr'+'ipt><div class="tooltip-inner"></div></div>'
+  })
+})
+</script>
+
+
+
 <p style="text-align:left;">
     <form method="post" action="/api/togglesecurity" style="float:right;">
-        <input type="submit" value="Toggle Security Mode">
+        <input class="btn btn-secondary" type="submit" value="Toggle Security Mode">
     </form>  
+
+
     <% if ( locals.uname ) { %>
-        Logged in as <%= locals.uname %>
+        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<%= locals.uname %>">Logged in</button>
     <% } else {%>
         Not logged in
     <% } %>
