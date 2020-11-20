@@ -4,7 +4,7 @@ It is easy to take for granted that the libraries one uses and relies on are sec
 
 ## Our Implementation
 
-There are many places where vulnerably components can exist, the OS, the web/application server, the DBMS, libraries, etc. We found a vulnerability in a recent version of Bootstrap, a library we were already using, and configured our site so that the insecure version called an earlier, vulnerable version (4.0.0) while our secure site used the most up-to-date available version of Bootstrap (4.3.1). The vulnerability in question is [CVE-2019-8331](https://github.com/advisories/GHSA-9v3m-8fp8-mj99) We then implemented a simple mechanism to trigger the vulnerability in the earlier version to demonstrate the weakness and also to verify the fix.
+There are many places where vulnerably components can exist, the OS, the web/application server, the DBMS, libraries, etc. We found a vulnerability in a recent version of Bootstrap, a library we were already using, and configured our site so that the insecure version called an earlier, vulnerable version (4.0.0) while our secure site used the most up-to-date available version of Bootstrap (4.3.1). The vulnerability in question is [CVE-2019-8331](https://github.com/advisories/GHSA-9v3m-8fp8-mj99). We then implemented a simple mechanism to trigger the vulnerability in the earlier version to demonstrate the weakness and also to verify the fix.
 
 ## Steps to Exploit
 1. Login as any user
