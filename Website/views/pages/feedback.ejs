@@ -1,0 +1,40 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include ('./../partials/head') %>
+</head>
+
+<body class="container">
+
+    <header>
+        <%- include ('./../partials/header') %>
+    </header>
+
+    <main>
+        <h2 class="centerHeader">Submit Feedback <%- include('./../partials/isSecureTitle.ejs') %></h2>
+        <div class="container d-flex justify-content-center">
+            <div class="bodyDiv">
+                <div class="feedbackNav text-center">
+                    <h3 style="color: white">Feedback</h3>                                       
+                </div>
+                <form id="submitForm" action="/feedback" method="POST">
+                    <div class="form-group">
+                        <label for="feedback">What Can We Do Better?</label>
+                        <textarea class="form-control" id="feedback" rows="4" name="feedback"></textarea>
+                    </div>
+                    <button id="submitBtn" type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <%- include ('./../partials/footer') %>
+    </footer>
+    <script src="/public/js/feedback.js"></script>
+</body>
+
+</html>
