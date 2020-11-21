@@ -12,12 +12,12 @@ $(function () {
 
 <p style="text-align:left;">
     <form method="post" action="/api/togglesecurity" style="float:right;">
-        <input class="btn btn-secondary" type="submit" value="Toggle Security Mode">
+        <input class="btn btn-link" type="submit" value="Toggle Security Mode">
     </form>  
 
 
     <% if ( locals.uname ) { %>
-        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="<%= locals.uname %>">Logged in</button>
+        <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="bottom" title="<%= locals.uname %>">Logged in</button>
     <% } else {%>
         Not logged in
     <% } %>
