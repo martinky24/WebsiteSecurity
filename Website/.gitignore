@@ -5,4 +5,5 @@ setenvs.sh
 *.rdb
 *.pem
 setenvs.sh
+setenv.sh
 sslcerts/
