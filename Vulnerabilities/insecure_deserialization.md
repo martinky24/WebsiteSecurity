@@ -4,7 +4,7 @@ Insecure deserialization occurs when data sent to a server is deserialized and i
 
 ## Our Implementation
 
-Our application did not have a need for this type of serialization/deserialization. In Node JS, the default serialization is using the javascript functions ```JSON.parse()``` and ```JSON.stringify()``` to manage javascript objects. These functions do not allow the ability to include executable code within the objects, such as functions. The npm package ```node-serialize``` does allow this ability, where we could send JS functions within JSON. By using javascript's Immediately-Invoked Function Expressions (IIFEs), we can execute the following code as it is deserialized. The two parenthesis after the function definition indicate an IIFE.
+Our application did not have a need for this type of serialization/deserialization. In Node JS, the default serialization is using the javascript functions ```JSON.parse()``` and ```JSON.stringify()``` to manage javascript objects. These functions do not allow the ability to include executable code within the objects, such as functions. The npm package ```node-serialize``` does allow this ability, where we could send JS functions within JSON. By using javascript's Immediately-Invoked Function Expressions (IIFEs), we can execute the following code as it is deserialized. The two parentheses after the function definition indicate an IIFE.
 
 ```json
 {"rce":"function (){
@@ -16,7 +16,7 @@ Our application did not have a need for this type of serialization/deserializati
 }
 ```
 
-This function could run anything we want to on the target server. In our case, we are simply going to run a script that already exists on the server that will delete a file or create a file called exploit.txt. We can see the creation of this file by navigating to ```/exploit```. Because you could gain remote shell access to this server using this vulnerability, we validate the input to only allow execution of the above payload (don't want someone runing up our AWS bills).
+This function could run anything we want to on the target server. In our case, we are simply going to run a script that already exists on the server that will delete a file or create a file called exploit.txt. We can see the creation of this file by navigating to ```/exploit```. Because you could gain remote shell access to this server using this vulnerability, we validate the input to only allow execution of the above payload (don't want someone running up our AWS bills).
 
 ## Steps to Exploit
 
