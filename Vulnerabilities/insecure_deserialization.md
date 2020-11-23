@@ -1,6 +1,6 @@
 # [Insecure Deserialization](https://owasp.org/www-project-top-ten/2017/A8_2017-Insecure_Deserialization)
 
-Insecure deserialization occurs when data sent to a server is deserialized and improperly verified, allowing execution of code that was not intended. This is a difficult vulnerability to exploit depending on the platform and how the app operates. For example, a web application with a Java back end could communitcate with the front end using Java objects that get serialized and deserialized between requests to maintain an application state. An attacker could create a custom object, encode it, then send it to the server, resulting in that code being executed on the server.
+Insecure deserialization occurs when data sent to a server is deserialized and improperly verified, allowing execution of code that was not intended. This is a difficult vulnerability to exploit depending on the platform and how the app operates. For example, a web application with a Java backend could communicate with the frontend using Java objects that get serialized and deserialized between requests to maintain an application state. An attacker could create a custom object, encode it, then send it to the server, resulting in that code being executed on the server.
 
 ## Our Implementation
 
