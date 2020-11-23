@@ -16,7 +16,7 @@ Our application did not have a need for this type of serialization/deserializati
 }
 ```
 
-This function could run anything we want to on the target server. In our case, we are simply going to run a script that already exists on the server that will delete a file or create a file called exploit.txt. We can see the creation of this file by navigating to ```/exploit```. Because you could gain remote shell access to this server using this vulnerability, we validate the input to only allow execution of the above payload (don't want someone running up our AWS bills).
+This function could run anything we want to on the target server. In our case, we are simply going to run a script that already exists on the server that will append the current time to a file exploit.txt. We can see the time the exploit was ran by navigating to ```/exploit```. Because you could gain remote shell access to this server using this vulnerability, we validate the input to only allow execution of the above payload (don't want someone running up our AWS bills).
 
 ## Steps to Exploit
 

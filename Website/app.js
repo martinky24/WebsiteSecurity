@@ -9,8 +9,8 @@ const path = require('path');
 
 // configure ssl
 var http = require("http");
-const httpPort = process.env.httpPort;
-const httpsPort = process.env.httpsPort;
+const httpPort = process.env.HTTPPORT;
+const httpsPort = process.env.HTTPSPORT;
 var https = require("https");
 var privateKey = fs.readFileSync(process.env.PRIVKEY, "utf8");
 var certificate = fs.readFileSync(process.env.CERT, "utf8");
