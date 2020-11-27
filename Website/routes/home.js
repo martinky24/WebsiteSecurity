@@ -6,10 +6,10 @@ router.get('/home', function(req, res, next) {
 		return res.redirect('/login');
 	}
 
-	res.render('pages/home',{
+	res.render('pages/home',Object.assign({
 		username:req.session.uname,
 		secure: req.session.secure
-	});
+	}, req.savedContext));
 });
 
 module.exports = router;

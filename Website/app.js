@@ -9,8 +9,8 @@ const path = require('path');
 
 // configure ssl
 var http = require("http");
-const httpPort = process.env.httpPort;
-const httpsPort = process.env.httpsPort;
+const httpPort = process.env.HTTPPORT;
+const httpsPort = process.env.HTTPSPORT;
 var https = require("https");
 var privateKey = fs.readFileSync(process.env.PRIVKEY, "utf8");
 var certificate = fs.readFileSync(process.env.CERT, "utf8");
@@ -110,6 +110,17 @@ app.get('/', function (req, res) {
 	res.redirect('/login');
 });
 
+// Endpoint for remote code execution through deserialization (see /routes/feedback.js)
+app.get("/exploit", function(req, res) {
+	let file = path.join(__dirname, "views", "exploit.txt");
+
+	if (fs.existsSync(file)) {
+		res.sendFile(file);
+	} else {
+		res.status(404).render('404');
+	}	
+})
+
 /* Load in the code which processes the routing  */
 var route_login = require("./routes/login.js");
 var route_home = require("./routes/home.js");
@@ -120,6 +131,7 @@ var route_withdrawals = require("./routes/withdrawals.js");
 var route_api = require("./routes/api.js");
 var route_register = require("./routes/register.js");
 route_admin = require("./routes/admin.js");
+let router_feedback = require("./routes/feedback.js");
 
 app.use(route_login);
 app.use(route_home);
@@ -130,7 +142,7 @@ app.use(route_withdrawals);
 app.use("/api",route_api);
 app.use(route_register);
 app.use(route_admin);
-
+app.use(router_feedback);
 
 /******************
  * Error pages
