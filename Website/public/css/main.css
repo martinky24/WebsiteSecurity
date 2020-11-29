@@ -27,7 +27,7 @@
     text-align:center;
 }
 
-.transferDiv, .depositDiv {
+.bodyDiv {
     width: 70%;
 }
 
@@ -36,12 +36,12 @@
     background-color: #007bff;
 }
 
-.withdrawalDiv {
-    width: 70%;
-}
-
 .withdrawalNav {
     background-color: #c300ff;
+}
+
+.feedbackNav {
+    background-color: #06993f;
 }
 
 .adminButton {

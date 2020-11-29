@@ -16,7 +16,7 @@
     <main>
         <h2 class="centerHeader">Deposits <%- include('./../partials/isSecureTitle.ejs') %></h2>
         <div class="container d-flex justify-content-center">
-            <div class="depositDiv">
+            <div class="bodyDiv">
                 <div>
                     <span>Account Number: <%=account_number%></span><br>
                     <span>Account Balance: $<%=balance%></span>
@@ -26,23 +26,6 @@
                 </div>
                 <form action="/deposits" method="POST">
                     <input type="hidden" name="to_account" value="<%=account_number%>">
-                    <!-- <div class="form-group">
-                        <label for="account_number">Account Number</label>
-                        <input id="account_number" class="form-control" required name="account_number"
-                            type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9"
-                            value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="routing_number">Routing Number</label>
-                        <input id="routing_number" class="form-control" required name="routing_number"
-                            type="text" pattern="[0-9]{8,9}" minlength="8" maxlength="9"
-                            value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="check_number">Check Number</label>
-                        <input id="check_number" class="form-control" required name="check_number" type="text"
-                            pattern="[0-9]{4,9}" minlength="4" maxlength="9" value="">
-                    </div> -->
                     <div class="form-group">
                         <label for="amount">Amount</label>
                         <input id="amount" class="form-control" required name="amount" type="number" step="any"
