@@ -14,7 +14,7 @@ In our app, we demonstrate a case of injection by not properly parameterizing th
 4. Enter a valid amount to transfer, ie. 1
 5. View the anticipated change in account balance above the transfer form
 
-If your injection irrepairably messed up the database, simply login as `admin`/`admin` and from the admin panel, reset the tables.
+If your injection irreparably messed up the database, simply login as `admin`/`admin` and from the admin panel, reset the tables.
 
 ## How We Patched it
 

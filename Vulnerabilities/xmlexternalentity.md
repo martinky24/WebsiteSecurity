@@ -1,11 +1,11 @@
 # [XML External Entities](https://owasp.org/www-project-top-ten/2017/A4_2017-XML_External_Entities_(XXE))
 
 The XML External Entity vulnerability is when an XML file contains an external entity which is then expanded/evaluated by a parser.
-This entity can access the server's file system and retrieve restricted data.
+This entity can then access the server's file system and retrieve restricted data.
 
 ## Our Implementation
 
-We had to fabricate a reason to use XML in our application since we would just use JSON for communication in a real banking app.
+We had to fabricate a reason to use XML in our application since we would just use JSON for communication in a modern banking app.
 We decided to add a functionality to the admin page that allows the admin to create a new user account using an XML file upload.
 
 ## Steps to Exploit
@@ -23,4 +23,4 @@ If any problems occur, reset the tables within the `/Admin` either on the insecu
 
 ## How We Patched it
 
-This vulnerability was difficult to exploit. Most of the javascript XML parser available have removed the parser ability to expand unknown external entities which prevents the vulnerability. In the insecure portion of our website we artificially expand the external entities to demonstrate the vulnerability on top of using a 3rd party XML parser. In the secure portion of the website we just use the 3rd party parser independently.
+This vulnerability was difficult to exploit; Most of the javascript XML parser libraries available have removed the ability to expand unknown external entities which prevents the vulnerability. In the insecure portion of our website we artificially expand the external entities to demonstrate the vulnerability on top of using a 3rd party XML parser. In the secure portion of the website we just use the 3rd party parser independently.

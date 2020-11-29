@@ -5,9 +5,8 @@ traces to the client or the default configurations for a certain framework allow
 
 ## Our Implementation
 
-Before our patch, the whole website ran queries using a superuser database role. We changed this to having an limited privilege admin and basic user roles.
-The transfer page which was vulnerable to sql injection was a good place to test the vulnerability since we need to see if the user can execute
-a truncate query which does is not allowed for the basicuser role but is for the superuser role.
+Before our patch, the whole website ran queries using a superuser database role. We changed this to having a limited privilege admin and basic user roles.
+We chose the transfer page, which was already vulnerable to sql injection, to test the vulnerability. We used this page to test if the user can execute a truncate query which is not allowed for the basic user role but is for the superuser role.
 
 ## Steps to Exploit
 
@@ -24,7 +23,4 @@ If any problems occur, reset the tables within the `/Admin` either on the insecu
 
 ## How We Patched it
 
-We were initially running all queries under one db superuser role. This meant that anyone on the webapp could utilize any query including the creation, truncation, and deletion of tables.
-We moved to creating two new roles: adminuser and basicuser. Both of these roles can perform SELECT, UPDATE, and INSERT queries while only adminuser can perform truncation. (for ease of use
-on the admin page) Neither of the roles have the privileges to create/delete tables or other sql functionalities. The basicuser role is used on all banking application pages while the adminuser is used for
-the table-based queries associated with the `/Admin` route.
+We were initially running all queries under one db superuser role. This meant that anyone on the webapp could utilize any query including the creation, truncation, and deletion of tables. We moved to creating two new roles: admin user and basic user. Both of these roles can perform SELECT, UPDATE, and INSERT queries while only admin users can perform truncation. (for ease of use on the admin page) Neither of the roles have the privileges to create/delete tables or other sql functionalities. The basic user role is used on all banking application pages while the admin user is used for the table-based queries associated with the `/Admin` route.
